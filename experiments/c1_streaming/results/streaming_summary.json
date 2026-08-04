@@ -1,0 +1,61 @@
+{
+  "config": {
+    "batch": 1,
+    "devices": [
+      "cuda",
+      "cpu"
+    ],
+    "dim": 128,
+    "dtype": "float32",
+    "lengths": [
+      10,
+      25,
+      50,
+      100,
+      200,
+      500,
+      1000,
+      2000,
+      5000,
+      10000
+    ],
+    "n_layers": 4,
+    "results_dir": "experiments/c1_streaming/results",
+    "seed": 1337,
+    "ssm": {
+      "d_conv": 4,
+      "d_state": 16,
+      "dt_rank": 8,
+      "expand": 2
+    },
+    "timed_repeats": 30,
+    "transformer": {
+      "dim_feedforward": 200,
+      "nhead": 4
+    },
+    "warmup_repeats": 10,
+    "window": 8
+  },
+  "equivalence": {
+    "cpu": {
+      "ssm_max_err": 7.152557373046875e-07,
+      "ssm_ok": true,
+      "tol": 0.0001,
+      "xf_max_err": 9.5367431640625e-07,
+      "xf_ok": true
+    },
+    "cuda": {
+      "ssm_max_err": 4.76837158203125e-07,
+      "ssm_ok": true,
+      "tol": 0.0001,
+      "xf_max_err": 9.5367431640625e-07,
+      "xf_ok": true
+    }
+  },
+  "n_rows": 60,
+  "params": {
+    "rel_diff": 0.012797074954296161,
+    "ssm": 466560,
+    "transformer": 472608
+  }
+}

@@ -1,0 +1,159 @@
+# =============================================================================
+# DeepSense 6G V2I (scenarios 31-34) data + preprocessing config.
+#
+# EVERYTHING is driven from this file. No hardcoded paths or hyperparameters in
+# scripts. An experiment must be reproducible from (this config + commit + seed).
+#
+# GUARDRAILS encoded here and enforced in code:
+#   - Scenario 34 is FULLY HELD OUT. It is marked `heldout: true` and the loader
+#     refuses to touch it unless allow_heldout=True is passed explicitly (only
+#     experiments/final_eval/ may do that).
+#   - Scenario 33 (night) is TEST-ONLY: it never appears in train/val.
+#   - Splits are by EPISODE (seq_index), never by sample -> no leakage.
+# =============================================================================
+
+version: "v1"                       # bump when the frozen split protocol changes
+data_root: "."                      # project root; scenario dirs live directly under it
+derived_root: "data/derived"        # all preprocessing/caches/stats/manifests go here
+                                    # (raw scenario data is NEVER written to)
+
+# --- Scenario registry -------------------------------------------------------
+# `role` is documentation of intent; the actual split assignment lives under
+# `split:` below and is what the code enforces.
+scenarios:
+  31:
+    dir: "Scenario31"
+    csv: "scenario31.csv"
+    condition: "day"
+    role: "train_val"
+    heldout: false
+  32:
+    dir: "Scenario32"
+    csv: "scenario32_dev.csv"
+    condition: "day"
+    role: "train_val"
+    heldout: false
+  33:
+    dir: "Scenario33"
+    csv: "scenario33_dev.csv"
+    condition: "night"
+    role: "test_zeroshot"           # test-only; NEVER tuned on
+    heldout: false
+  34:
+    dir: "Scenario34"
+    csv: "scenario34_dev.csv"
+    condition: "night"
+    role: "final_eval_only"
+    heldout: true                   # HARD BLOCK unless allow_heldout=True
+
+# --- CSV column mapping ------------------------------------------------------
+columns:
+  index: "index"
+  episode: "seq_index"              # groups consecutive samples = one vehicle pass
+  beam: "unit1_beam"                # 1-indexed label in [1, 64]
+  max_pwr: "unit1_max_pwr"
+  time_stamp: "time_stamp"
+  rgb: "unit1_rgb"
+  pwr: "unit1_pwr_60ghz"            # 64-dim received-power vector (per beam)
+  lidar: "unit1_lidar"
+  radar: "unit1_radar"
+  bs_loc: "unit1_loc"               # base-station GPS (fixed)
+  ue_loc: "unit2_loc"               # vehicle GPS (per-sample) -- the only uplink modality
+  ue_speed: "unit2_spd_over_grnd_kmph"
+
+# --- Beam / label ------------------------------------------------------------
+beam:
+  num_beams: 64
+  label_base: 1                     # labels are 1-indexed in the CSV -> subtract to get [0,63]
+
+# --- Frozen split protocol ---------------------------------------------------
+# Deterministic, episode-level, leakage-free. On first use the resolved
+# assignment is written to `<derived_root>/splits/<version>.json` and reused
+# verbatim thereafter (frozen). Delete that manifest to regenerate.
+split:
+  train_val_scenarios: [31, 32]
+  test_scenarios: [33]              # zero-shot night; test-only
+  final_eval_scenarios: [34]        # heldout; never auto-loaded
+  val_fraction: 0.15                # fraction of train_val EPISODES held out for val
+  split_seed: 1337
+
+# --- Streaming trajectory construction --------------------------------------
+streaming:
+  min_episode_len: 4                # drop degenerate episodes shorter than this
+  sort_within_episode_by: "index"   # time order within a pass
+
+# --- Snapshot task -----------------------------------------------------------
+# Sliding window over an episode: `window` past frames -> current beam, plus
+# auxiliary future beams at horizons (for the tracking framing).
+snapshot:
+  window: 8
+  future_horizons: [1, 2, 3]        # t+1..t+3 auxiliary heads
+  stride: 1
+
+# --- Per-modality preprocessing ---------------------------------------------
+modalities:
+  camera:
+    enabled: true
+    resize_hw: [224, 224]           # H, W
+    # ImageNet stats (encoders are MobileNetV3-class; keeps pretrained option open)
+    mean: [0.485, 0.456, 0.406]
+    std: [0.229, 0.224, 0.225]
+
+  lidar:
+    enabled: true
+    # Top-down BEV grid in the base-station's local frame (metres).
+    x_range: [-10.0, 40.0]          # forward
+    y_range: [-25.0, 25.0]          # lateral
+    z_range: [-3.0, 5.0]            # height clip
+    grid_hw: [128, 128]             # H (y), W (x)
+    channels: ["height", "density", "intensity"]
+    density_log: true               # log(1+count) for the density channel
+
+  radar:
+    enabled: true
+    # Input cube axes: (antennas=4, samples_per_chirp=256, chirps=250).
+    n_range_fft: 256                # range FFT over samples axis
+    n_angle_fft: 64                 # angle FFT over antenna axis (zero-padded from 4)
+    n_doppler_fft: 256              # Doppler FFT over chirp axis
+    range_bins_keep: 128            # keep near-range half after range FFT
+    log_magnitude: true             # 20*log10(|.|) then per-map normalize
+    remove_static: true             # subtract mean over chirps (MTI clutter removal) for RV map
+    out_hw: [128, 128]              # resize both maps to this (H, W); 2-channel output [RA, RV]
+
+  gps:
+    enabled: true
+    # Scenario-local normalization. Stats are FIT ON TRAIN EPISODES ONLY and
+    # cached to <derived_root>/stats/gps_<version>.json (no test/heldout leakage).
+    # Vehicle position relative to the (fixed) base station, then standardized.
+    relative_to_bs: true
+    features: ["dlat", "dlon", "speed_kmph"]
+
+# --- Preprocessing cache (uses the whole CPU) --------------------------------
+# Preprocess every frame ONCE into memmapped tensors under derived_root, in
+# parallel across all cores. Training then reads tensors instead of recomputing
+# FFTs/BEV every step. Raw data is never mutated.
+cache:
+  enabled: true
+  dir: "data/derived/cache"
+  dtype: "float32"
+  num_workers: 0          # 0 => auto = os.cpu_count() (24 threads here)
+  chunk_per_worker: 4     # split each scenario into num_workers*chunk chunks
+
+# --- DataLoader / runtime (uses the GPU) -------------------------------------
+loader:
+  batch_size: 64
+  num_workers: 12         # <= physical cores; leave headroom for the main proc
+  pin_memory: true        # faster host->GPU copies
+  persistent_workers: true
+  prefetch_factor: 4
+  drop_last: true
+
+runtime:
+  device: "auto"          # auto -> cuda if available else cpu (RTX 3070 Ti, 8 GB)
+  amp: true               # mixed precision (fp16) on GPU
+  channels_last: true     # NHWC memory format for conv encoders on Ampere
+  cudnn_benchmark: true    # autotune convs for fixed input sizes
+  matmul_tf32: true        # TF32 matmuls on Ampere (faster, ~fp32 accuracy)
+
+# --- Reproducibility ---------------------------------------------------------
+seed: 1337

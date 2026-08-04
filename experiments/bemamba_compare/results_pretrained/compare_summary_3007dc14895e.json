@@ -1,0 +1,84 @@
+{
+  "bemamba_reference": {
+    "dba_4M": 0.9107,
+    "fps_4M_rtx3090": 28.83,
+    "gflops_4M": 23.4,
+    "note": "snapshot (5 frames), random split incl. S34, 13.3M-param FC head",
+    "params_4M_M": 16.19,
+    "protocol": "random 80/20 over S31-34 (window-level)",
+    "top3_overall_4M": 0.8828,
+    "top3_per_scenario_4M": {
+      "S31": 1.0,
+      "S32": 0.8811,
+      "S33": 0.8494,
+      "S34": 0.8564
+    },
+    "venue": "IEEE TWC 2026"
+  },
+  "cfg_hash": "3007dc14895e",
+  "part_a": {
+    "ssm|2M|episode-random": {
+      "dba": 0.8159124799325986,
+      "n": 2,
+      "params": 1493218,
+      "per_scenario_top3": {
+        "31": 0.7893545672346514,
+        "32": 0.6086219192622815,
+        "33": 0.7921492611974758,
+        "34": 0.7006880670693031
+      },
+      "top1": 0.37873558158225284,
+      "top3": 0.7290717457561848
+    },
+    "ssm|2M|window-random": {
+      "dba": 0.8821111394052026,
+      "n": 2,
+      "params": 1493218,
+      "per_scenario_top3": {
+        "31": 0.8503523517703528,
+        "32": 0.8362456656509405,
+        "33": 0.8322262433765479,
+        "34": 0.8228757197253498
+      },
+      "top1": 0.4662180719582532,
+      "top3": 0.8374073056852513
+    }
+  },
+  "part_b_split_inference": {
+    "analytical_payloads": {
+      "crossover_length_state_vs_features": 160.0,
+      "feature_step_bytes": 512,
+      "note": "SSM state is constant; feature-history & KV-cache grow O(L). State wins beyond ~crossover_length frames.",
+      "per_frame_raw_bytes": 929804,
+      "resume_bytes_by_length": {
+        "8": {
+          "feature_history": 4096,
+          "kv_cache": 32768,
+          "ssm_state_const": 81920
+        },
+        "32": {
+          "feature_history": 16384,
+          "kv_cache": 131072,
+          "ssm_state_const": 81920
+        },
+        "128": {
+          "feature_history": 65536,
+          "kv_cache": 524288,
+          "ssm_state_const": 81920
+        },
+        "1000": {
+          "feature_history": 512000,
+          "kv_cache": 4096000,
+          "ssm_state_const": 81920
+        },
+        "10000": {
+          "feature_history": 5120000,
+          "kv_cache": 40960000,
+          "ssm_state_const": 81920
+        }
+      },
+      "ssm_state_bytes_const": 81920
+    },
+    "feature_quant_pareto": null
+  }
+}

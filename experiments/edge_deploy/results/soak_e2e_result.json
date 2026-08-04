@@ -1,0 +1,169 @@
+{
+  "model": "artifacts/deploy_w2/beam_ssm_fp32.onnx",
+  "seconds": 150.0,
+  "threads": 4,
+  "frame": "960x540",
+  "iterations": 3026,
+  "throughput_hz": 20.2,
+  "p50_first10s_ms": 49.73,
+  "p50_last10s_ms": 49.33,
+  "drift_pct": -0.8,
+  "temp_start_c": 48.7,
+  "temp_peak_c": 73.5,
+  "temp_end_c": 73.5,
+  "throttled_start": "throttled=0x0",
+  "throttled_end": "throttled=0x0",
+  "ever_throttled": false,
+  "samples": [
+    [
+      0.1,
+      48.2,
+      "throttled=0x0"
+    ],
+    [
+      5.1,
+      51.6,
+      "throttled=0x0"
+    ],
+    [
+      10.1,
+      54.0,
+      "throttled=0x0"
+    ],
+    [
+      15.2,
+      54.5,
+      "throttled=0x0"
+    ],
+    [
+      20.2,
+      56.4,
+      "throttled=0x0"
+    ],
+    [
+      25.2,
+      57.9,
+      "throttled=0x0"
+    ],
+    [
+      30.3,
+      58.4,
+      "throttled=0x0"
+    ],
+    [
+      35.3,
+      59.4,
+      "throttled=0x0"
+    ],
+    [
+      40.3,
+      60.3,
+      "throttled=0x0"
+    ],
+    [
+      45.4,
+      60.3,
+      "throttled=0x0"
+    ],
+    [
+      50.4,
+      61.8,
+      "throttled=0x0"
+    ],
+    [
+      55.4,
+      62.3,
+      "throttled=0x0"
+    ],
+    [
+      60.4,
+      63.3,
+      "throttled=0x0"
+    ],
+    [
+      65.5,
+      64.2,
+      "throttled=0x0"
+    ],
+    [
+      70.5,
+      65.2,
+      "throttled=0x0"
+    ],
+    [
+      75.6,
+      66.7,
+      "throttled=0x0"
+    ],
+    [
+      80.6,
+      67.6,
+      "throttled=0x0"
+    ],
+    [
+      85.6,
+      67.2,
+      "throttled=0x0"
+    ],
+    [
+      90.6,
+      68.6,
+      "throttled=0x0"
+    ],
+    [
+      95.6,
+      68.6,
+      "throttled=0x0"
+    ],
+    [
+      100.6,
+      69.6,
+      "throttled=0x0"
+    ],
+    [
+      105.7,
+      69.1,
+      "throttled=0x0"
+    ],
+    [
+      110.7,
+      70.6,
+      "throttled=0x0"
+    ],
+    [
+      115.8,
+      71.5,
+      "throttled=0x0"
+    ],
+    [
+      120.8,
+      71.1,
+      "throttled=0x0"
+    ],
+    [
+      125.8,
+      71.1,
+      "throttled=0x0"
+    ],
+    [
+      130.9,
+      73.5,
+      "throttled=0x0"
+    ],
+    [
+      135.9,
+      72.0,
+      "throttled=0x0"
+    ],
+    [
+      141.0,
+      73.5,
+      "throttled=0x0"
+    ],
+    [
+      146.0,
+      73.5,
+      "throttled=0x0"
+    ]
+  ]
+}

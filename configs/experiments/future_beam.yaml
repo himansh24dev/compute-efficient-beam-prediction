@@ -1,0 +1,58 @@
+# =============================================================================
+# Future-beam prediction — the task where temporal context genuinely matters.
+#
+# Motivation: if CURRENT-beam prediction has a short context horizon (see the
+# context_window experiment), FUTURE-beam prediction (t+1..t+10) should need more
+# history, because predicting further ahead depends on motion dynamics. This is
+# the DeepSense "future beam prediction" task (prior work uses RNN/GRU for the
+# long-term dependencies), done on our existing S31+S32 data.
+#
+# Two questions this answers:
+#   1. Does a LONGER input window help far-future prediction? (W=8 vs W=32)
+#      If yes -> long context matters -> the growing-KV-cache concern is real.
+#   2. Does the SSM hold its edge over the matched Transformer as the horizon
+#      grows? (per-horizon Top-1 for both cores)
+#
+# One model predicts all horizons at once (current head + auxiliary t+h heads),
+# so each run yields the full accuracy-vs-horizon curve.
+# =============================================================================
+
+data_config: "configs/data.yaml"
+seed: 1337
+combo: ["gps", "camera"]
+cores: ["ssm", "transformer"]
+seeds: [1337, 2024]
+
+windows: [8, 32]                       # short vs long input context
+future_horizons: [1, 3, 5, 10]         # predict beam at t+1 .. t+10
+future_loss_weight: 1.0                 # weight on the summed future-head losses
+
+# Controlled comparison: fix the anchor set across window sizes (see context_window).
+# Must be >= max(windows); anchors also need t+max_horizon within the episode.
+anchor_window: 32
+batch_by_window: {8: 48, 32: 24}
+
+model:
+  dim: 128
+  core_layers: 4
+  camera: {width: 32}
+  map: {width: 32}
+  gps: {in_dim: 3, hidden: 128}
+  modality_dropout_p: 0.10
+  param_parity_tol: 0.10
+  future_horizons: [1, 3, 5, 10]        # MUST match snapshot horizons above (head order)
+  ssm: {d_state: 16, d_conv: 4, expand: 2, dt_rank: 8}
+  transformer: {nhead: 4, dim_feedforward: 176, max_len: 128}
+
+train:
+  epochs: 25
+  batch_size: 48
+  lr: 0.0003
+  weight_decay: 0.05
+  warmup_epochs: 2
+  grad_clip: 1.0
+  label_smoothing: 0.05
+  num_workers: 18
+  prefetch_factor: 3
+
+results_dir: "experiments/future_beam/results"

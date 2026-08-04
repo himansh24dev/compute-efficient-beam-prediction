@@ -1,0 +1,40 @@
+# =============================================================================
+# C1 / E2 — streaming latency & memory characterization.
+#
+# Measures, as the stream length L grows, the per-step latency and the retained
+# streaming-state memory for three temporal cores at MATCHED parameters:
+#   ssm        : SSM recurrent step  -> fixed state, expect O(1) latency & memory
+#   xf_grow    : Transformer + growing KV cache -> expect O(L) memory, rising latency
+#   xf_window  : Transformer + sliding window W -> O(1) but bounded history
+#
+# This is the systems half of C1. Desktop (3070 Ti / CPU) numbers are a PROXY;
+# the constant-vs-growing SHAPE is architecture-inherent and holds on any HW.
+# Jetson measurements come later in C3.
+# =============================================================================
+
+dim: 128
+n_layers: 4
+
+ssm:
+  d_state: 16
+  d_conv: 4
+  expand: 2
+  dt_rank: 8
+
+transformer:
+  nhead: 4
+  dim_feedforward: 200      # tuned so the transformer core matches the SSM core (±10%)
+
+window: 8                   # sliding-window size for xf_window (matches phase0 window)
+
+# Stream lengths to probe (context length at which we measure a step).
+lengths: [10, 25, 50, 100, 200, 500, 1000, 2000, 5000, 10000]
+
+batch: 1
+dtype: "float32"
+warmup_repeats: 10          # untimed steps to warm caches/kernels before timing
+timed_repeats: 30           # timed single-step samples for p50/p95/p99
+devices: ["cuda", "cpu"]    # runs whichever are available
+seed: 1337
+
+results_dir: "experiments/c1_streaming/results"

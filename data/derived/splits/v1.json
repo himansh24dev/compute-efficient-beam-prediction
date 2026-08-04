@@ -1,0 +1,606 @@
+{
+  "split_seed": 1337,
+  "test": [
+    {
+      "episode_id": 1,
+      "length": 296,
+      "row_end": 296,
+      "row_start": 0,
+      "scenario_id": 33
+    },
+    {
+      "episode_id": 2,
+      "length": 168,
+      "row_end": 464,
+      "row_start": 296,
+      "scenario_id": 33
+    },
+    {
+      "episode_id": 3,
+      "length": 119,
+      "row_end": 583,
+      "row_start": 464,
+      "scenario_id": 33
+    },
+    {
+      "episode_id": 4,
+      "length": 399,
+      "row_end": 982,
+      "row_start": 583,
+      "scenario_id": 33
+    },
+    {
+      "episode_id": 5,
+      "length": 173,
+      "row_end": 1155,
+      "row_start": 982,
+      "scenario_id": 33
+    },
+    {
+      "episode_id": 7,
+      "length": 173,
+      "row_end": 1328,
+      "row_start": 1155,
+      "scenario_id": 33
+    },
+    {
+      "episode_id": 8,
+      "length": 199,
+      "row_end": 1527,
+      "row_start": 1328,
+      "scenario_id": 33
+    },
+    {
+      "episode_id": 10,
+      "length": 188,
+      "row_end": 1715,
+      "row_start": 1527,
+      "scenario_id": 33
+    },
+    {
+      "episode_id": 11,
+      "length": 345,
+      "row_end": 2060,
+      "row_start": 1715,
+      "scenario_id": 33
+    },
+    {
+      "episode_id": 12,
+      "length": 154,
+      "row_end": 2214,
+      "row_start": 2060,
+      "scenario_id": 33
+    },
+    {
+      "episode_id": 13,
+      "length": 191,
+      "row_end": 2405,
+      "row_start": 2214,
+      "scenario_id": 33
+    },
+    {
+      "episode_id": 14,
+      "length": 140,
+      "row_end": 2545,
+      "row_start": 2405,
+      "scenario_id": 33
+    },
+    {
+      "episode_id": 16,
+      "length": 260,
+      "row_end": 2805,
+      "row_start": 2545,
+      "scenario_id": 33
+    },
+    {
+      "episode_id": 17,
+      "length": 157,
+      "row_end": 2962,
+      "row_start": 2805,
+      "scenario_id": 33
+    },
+    {
+      "episode_id": 18,
+      "length": 258,
+      "row_end": 3220,
+      "row_start": 2962,
+      "scenario_id": 33
+    },
+    {
+      "episode_id": 19,
+      "length": 296,
+      "row_end": 3516,
+      "row_start": 3220,
+      "scenario_id": 33
+    },
+    {
+      "episode_id": 20,
+      "length": 302,
+      "row_end": 3818,
+      "row_start": 3516,
+      "scenario_id": 33
+    },
+    {
+      "episode_id": 21,
+      "length": 163,
+      "row_end": 3981,
+      "row_start": 3818,
+      "scenario_id": 33
+    }
+  ],
+  "train": [
+    {
+      "episode_id": 2,
+      "length": 92,
+      "row_end": 92,
+      "row_start": 0,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 3,
+      "length": 281,
+      "row_end": 373,
+      "row_start": 92,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 4,
+      "length": 102,
+      "row_end": 475,
+      "row_start": 373,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 7,
+      "length": 207,
+      "row_end": 682,
+      "row_start": 475,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 8,
+      "length": 88,
+      "row_end": 770,
+      "row_start": 682,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 9,
+      "length": 218,
+      "row_end": 988,
+      "row_start": 770,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 12,
+      "length": 91,
+      "row_end": 1145,
+      "row_start": 1054,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 13,
+      "length": 173,
+      "row_end": 1318,
+      "row_start": 1145,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 14,
+      "length": 81,
+      "row_end": 1399,
+      "row_start": 1318,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 15,
+      "length": 134,
+      "row_end": 1533,
+      "row_start": 1399,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 17,
+      "length": 165,
+      "row_end": 1698,
+      "row_start": 1533,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 18,
+      "length": 88,
+      "row_end": 1786,
+      "row_start": 1698,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 19,
+      "length": 159,
+      "row_end": 1945,
+      "row_start": 1786,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 20,
+      "length": 91,
+      "row_end": 2036,
+      "row_start": 1945,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 21,
+      "length": 161,
+      "row_end": 2197,
+      "row_start": 2036,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 22,
+      "length": 99,
+      "row_end": 2296,
+      "row_start": 2197,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 23,
+      "length": 148,
+      "row_end": 2444,
+      "row_start": 2296,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 24,
+      "length": 132,
+      "row_end": 2576,
+      "row_start": 2444,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 25,
+      "length": 188,
+      "row_end": 2764,
+      "row_start": 2576,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 26,
+      "length": 134,
+      "row_end": 2898,
+      "row_start": 2764,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 27,
+      "length": 162,
+      "row_end": 3060,
+      "row_start": 2898,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 28,
+      "length": 120,
+      "row_end": 3180,
+      "row_start": 3060,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 31,
+      "length": 163,
+      "row_end": 3586,
+      "row_start": 3423,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 32,
+      "length": 118,
+      "row_end": 3704,
+      "row_start": 3586,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 33,
+      "length": 183,
+      "row_end": 3887,
+      "row_start": 3704,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 34,
+      "length": 94,
+      "row_end": 3981,
+      "row_start": 3887,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 35,
+      "length": 192,
+      "row_end": 4173,
+      "row_start": 3981,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 36,
+      "length": 89,
+      "row_end": 4262,
+      "row_start": 4173,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 37,
+      "length": 172,
+      "row_end": 4434,
+      "row_start": 4262,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 39,
+      "length": 125,
+      "row_end": 4559,
+      "row_start": 4434,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 40,
+      "length": 81,
+      "row_end": 4640,
+      "row_start": 4559,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 42,
+      "length": 111,
+      "row_end": 4751,
+      "row_start": 4640,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 43,
+      "length": 159,
+      "row_end": 4910,
+      "row_start": 4751,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 44,
+      "length": 122,
+      "row_end": 5032,
+      "row_start": 4910,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 49,
+      "length": 203,
+      "row_end": 5489,
+      "row_start": 5286,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 51,
+      "length": 165,
+      "row_end": 5775,
+      "row_start": 5610,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 52,
+      "length": 74,
+      "row_end": 5849,
+      "row_start": 5775,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 53,
+      "length": 204,
+      "row_end": 6053,
+      "row_start": 5849,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 56,
+      "length": 118,
+      "row_end": 6171,
+      "row_start": 6053,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 57,
+      "length": 89,
+      "row_end": 6260,
+      "row_start": 6171,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 58,
+      "length": 124,
+      "row_end": 6384,
+      "row_start": 6260,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 59,
+      "length": 81,
+      "row_end": 6465,
+      "row_start": 6384,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 61,
+      "length": 102,
+      "row_end": 6691,
+      "row_start": 6589,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 62,
+      "length": 216,
+      "row_end": 6907,
+      "row_start": 6691,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 63,
+      "length": 105,
+      "row_end": 7012,
+      "row_start": 6907,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 1,
+      "length": 144,
+      "row_end": 144,
+      "row_start": 0,
+      "scenario_id": 32
+    },
+    {
+      "episode_id": 2,
+      "length": 160,
+      "row_end": 304,
+      "row_start": 144,
+      "scenario_id": 32
+    },
+    {
+      "episode_id": 3,
+      "length": 104,
+      "row_end": 408,
+      "row_start": 304,
+      "scenario_id": 32
+    },
+    {
+      "episode_id": 4,
+      "length": 109,
+      "row_end": 517,
+      "row_start": 408,
+      "scenario_id": 32
+    },
+    {
+      "episode_id": 5,
+      "length": 405,
+      "row_end": 922,
+      "row_start": 517,
+      "scenario_id": 32
+    },
+    {
+      "episode_id": 6,
+      "length": 197,
+      "row_end": 1119,
+      "row_start": 922,
+      "scenario_id": 32
+    },
+    {
+      "episode_id": 7,
+      "length": 136,
+      "row_end": 1255,
+      "row_start": 1119,
+      "scenario_id": 32
+    },
+    {
+      "episode_id": 8,
+      "length": 313,
+      "row_end": 1568,
+      "row_start": 1255,
+      "scenario_id": 32
+    },
+    {
+      "episode_id": 10,
+      "length": 345,
+      "row_end": 1913,
+      "row_start": 1568,
+      "scenario_id": 32
+    },
+    {
+      "episode_id": 11,
+      "length": 123,
+      "row_end": 2036,
+      "row_start": 1913,
+      "scenario_id": 32
+    },
+    {
+      "episode_id": 12,
+      "length": 258,
+      "row_end": 2294,
+      "row_start": 2036,
+      "scenario_id": 32
+    },
+    {
+      "episode_id": 13,
+      "length": 122,
+      "row_end": 2416,
+      "row_start": 2294,
+      "scenario_id": 32
+    },
+    {
+      "episode_id": 14,
+      "length": 376,
+      "row_end": 2792,
+      "row_start": 2416,
+      "scenario_id": 32
+    },
+    {
+      "episode_id": 16,
+      "length": 184,
+      "row_end": 2976,
+      "row_start": 2792,
+      "scenario_id": 32
+    },
+    {
+      "episode_id": 17,
+      "length": 259,
+      "row_end": 3235,
+      "row_start": 2976,
+      "scenario_id": 32
+    }
+  ],
+  "val": [
+    {
+      "episode_id": 10,
+      "length": 66,
+      "row_end": 1054,
+      "row_start": 988,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 29,
+      "length": 140,
+      "row_end": 3320,
+      "row_start": 3180,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 30,
+      "length": 103,
+      "row_end": 3423,
+      "row_start": 3320,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 45,
+      "length": 139,
+      "row_end": 5171,
+      "row_start": 5032,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 48,
+      "length": 115,
+      "row_end": 5286,
+      "row_start": 5171,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 50,
+      "length": 121,
+      "row_end": 5610,
+      "row_start": 5489,
+      "scenario_id": 31
+    },
+    {
+      "episode_id": 60,
+      "length": 124,
+      "row_end": 6589,
+      "row_start": 6465,
+      "scenario_id": 31
+    }
+  ],
+  "val_fraction": 0.15,
+  "version": "v1"
+}

@@ -1,0 +1,57 @@
+# =============================================================================
+# Phase 1 — full-multimodal parity + modality ablation + day->night zero-shot.
+#
+# Task:   snapshot CURRENT-beam prediction, PROPER frozen split
+#         (train/val = S31+S32 day; test = S33 night, ZERO-SHOT cross-condition).
+# Sweep:  {modality combos} x {ssm, transformer} x {seeds}.
+#         Encoders/fusion/head identical across cores; core params matched ±10%.
+# Output: E1 parity table across modality combos + day->night generalization,
+#         SSM vs matched Transformer.
+#
+# This runs unattended (overnight) via scripts/run_phase1_overnight.sh, which
+# first builds the S32/S33 caches. The sweep is RESUMABLE and per-run robust.
+# =============================================================================
+
+data_config: "configs/data.yaml"
+seed: 1337
+
+sweep:
+  modality_combos:
+    - ["gps", "camera"]                       # matches the Gate-0 pair (on the full split now)
+    - ["gps", "camera", "radar"]
+    - ["gps", "camera", "lidar"]
+    - ["gps", "camera", "lidar", "radar"]     # full multimodal
+  cores: ["ssm", "transformer"]
+  seeds: [1337, 2024, 7]
+  # => 4 combos x 2 cores x 3 seeds = 24 runs.
+
+model:
+  dim: 128
+  core_layers: 4
+  camera: {width: 32}
+  map: {width: 32}                            # LiDAR/radar map-CNN width
+  gps: {in_dim: 3, hidden: 128}
+  map_channels: {lidar: 3, radar: 2}
+  modality_dropout_p: 0.15                    # 4 modalities -> stronger dropout for robustness (E4)
+  param_parity_tol: 0.10
+  # future_horizons: []                       # current-beam only (snapshot task)
+  ssm: {d_state: 16, d_conv: 4, expand: 2, dt_rank: 8}
+  transformer: {nhead: 4, dim_feedforward: 176}
+
+train:
+  epochs: 30
+  batch_size: 48                              # 4 modalities on 8 GB VRAM (AMP); drop to 32 if OOM
+  lr: 0.0003
+  weight_decay: 0.05
+  warmup_epochs: 2
+  grad_clip: 1.0
+  label_smoothing: 0.05
+  # --- data pipeline throughput (MEASURED) ---------------------------------
+  # The camera windows (8x224x224) are big; the GPU was ~90% idle waiting on
+  # data with 12 workers (98 windows/s). 18 workers @ prefetch 3 feeds it ~3-4x
+  # faster (~300-420 w/s) while keeping RAM well under 62 GB (prefetch x workers
+  # bounds the buffer). Raise workers toward 22 for more speed IF RAM stays safe.
+  num_workers: 18
+  prefetch_factor: 3
+
+results_dir: "experiments/phase1/results"

@@ -1,0 +1,18 @@
+{
+  "config_hash": "8eab33cd5a8a",
+  "curve": {
+    "ssm": {
+      "16": 0.48910081743869205
+    },
+    "transformer": {
+      "16": 0.47002724795640327
+    }
+  },
+  "parity": {
+    "relative_diff": 0.004801097393689987,
+    "ssm_core_params": 466560,
+    "tol": 0.1,
+    "transformer_core_params": 464320,
+    "within_tol": true
+  }
+}

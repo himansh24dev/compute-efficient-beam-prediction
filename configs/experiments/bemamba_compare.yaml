@@ -1,0 +1,55 @@
+# =============================================================================
+# Fair, same-protocol comparison to BeMamba (IEEE TWC 2026) + state-split (P2).
+#
+# One run produces everything:
+#   Part A  accuracy + efficiency: {ssm, transformer} x {2M,3M,4M}
+#           x {window-random (BeMamba, leaky), episode-random (honest)} x seeds.
+#           Metrics: Top-1/2/3/5 + exact DeepSense/BeMamba DBA; params/FPS/mem/FLOPs.
+#   Part B  state-split analysis on the 4M SSM: analytical bytes-to-resume
+#           (SSM state vs feature-history vs KV cache) + payload-quantization Pareto.
+#
+# Protocol notes for honesty:
+#   - window=5 to match BeMamba's 5 sensing instances.
+#   - Scenarios 31-33 only (34 stays HELD OUT; BeMamba used 31-34 -> approximate).
+#   - The window-random vs episode-random gap quantifies BeMamba's leakage inflation.
+# =============================================================================
+
+data_config: "configs/data.yaml"
+compare_scenarios: [31, 32, 33, 34]    # MATCH BeMamba: all four scenarios, incl. 34, random 80/20
+                                       # (deliberately un-holds-out 34 for this comparison only)
+window: 5                              # match BeMamba's 5-instance input
+
+sweep:
+  cores: ["ssm"]                      # transformer dropped — SSM-vs-Transformer already shown 5x;
+                                      # this run compares OUR SSM to BeMamba's published numbers.
+  combos: ["2M", "3M", "4M"]          # 2M=gps+cam, 3M=+lidar, 4M=+radar (matches BeMamba Fig 9)
+  protocols: ["window-random", "episode-random"]
+  seeds: [1337, 2024]
+  # => 1 x 3 x 2 x 2 = 12 runs.
+
+split:
+  train_frac: 0.80                    # 80/20 like BeMamba
+
+model:
+  dim: 128
+  core_layers: 4
+  camera: {width: 32}
+  map: {width: 32}
+  gps: {in_dim: 3, hidden: 128}
+  modality_dropout_p: 0.10
+  param_parity_tol: 0.10
+  ssm: {d_state: 16, d_conv: 4, expand: 2, dt_rank: 8}
+  transformer: {nhead: 4, dim_feedforward: 176, max_len: 128}
+
+train:
+  epochs: 50               # bumped from 30: curve still creeping at ep30; 50 removes undertraining doubt
+  batch_size: 64
+  lr: 0.0003
+  weight_decay: 0.05
+  warmup_epochs: 2
+  grad_clip: 1.0
+  label_smoothing: 0.05
+  num_workers: 12                     # window=5 -> samples small, RAM-safe
+  prefetch_factor: 2
+
+results_dir: "experiments/bemamba_compare/results"

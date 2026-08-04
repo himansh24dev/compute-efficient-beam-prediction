@@ -1,0 +1,14 @@
+# Core data + preprocessing stack.
+# Pinned loosely; the data package's pure-numpy preprocessing runs with just
+# numpy/pandas/opencv. torch is only needed to instantiate the Datasets.
+numpy>=1.26,<2.0
+pandas>=2.0
+opencv-python>=4.8
+PyYAML>=6.0
+plyfile>=1.0          # ASCII PLY LiDAR reader (lightweight; open3d not required)
+
+# Modeling / runtime (needed to use data.dataset torch Datasets and beyond).
+torch>=2.2
+
+# Dev / testing.
+pytest>=8.0

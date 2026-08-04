@@ -1,0 +1,161 @@
+{
+  "bemamba_reference": {
+    "dba_4M": 0.9107,
+    "fps_4M_rtx3090": 28.83,
+    "gflops_4M": 23.4,
+    "note": "snapshot (5 frames), random split incl. S34, 13.3M-param FC head",
+    "params_4M_M": 16.19,
+    "protocol": "random 80/20 over S31-34 (window-level)",
+    "top3_overall_4M": 0.8828,
+    "top3_per_scenario_4M": {
+      "S31": 1.0,
+      "S32": 0.8811,
+      "S33": 0.8494,
+      "S34": 0.8564
+    },
+    "venue": "IEEE TWC 2026"
+  },
+  "cfg_hash": "ce3b69181198",
+  "part_a": {
+    "ssm|2M|episode-random": {
+      "dba": 0.8426648618891712,
+      "n": 2,
+      "params": 590594,
+      "per_scenario_top3": {
+        "31": 0.8392550333222228,
+        "32": 0.6976813613294855,
+        "33": 0.8226344851469909,
+        "34": 0.748834376694888
+      },
+      "top1": 0.4154239309048403,
+      "top3": 0.7809326180487803
+    },
+    "ssm|2M|window-random": {
+      "dba": 0.8894900651049246,
+      "n": 2,
+      "params": 590594,
+      "per_scenario_top3": {
+        "31": 0.8580073292563373,
+        "32": 0.8549122622675214,
+        "33": 0.8423300298787036,
+        "34": 0.8522138289901778
+      },
+      "top1": 0.49217248008788794,
+      "top3": 0.8527876956879978
+    },
+    "ssm|3M|episode-random": {
+      "dba": 0.837277480000006,
+      "n": 2,
+      "params": 688963,
+      "per_scenario_top3": {
+        "31": 0.8189833238495285,
+        "32": 0.7001525856635817,
+        "33": 0.8005233184546714,
+        "34": 0.73455778936047
+      },
+      "top1": 0.4042819243312662,
+      "top3": 0.7684178805722632
+    },
+    "ssm|3M|window-random": {
+      "dba": 0.879730841064261,
+      "n": 2,
+      "params": 688963,
+      "per_scenario_top3": {
+        "31": 0.8223413939591989,
+        "32": 0.8394714721025534,
+        "33": 0.8178569792477897,
+        "34": 0.822107242925908
+      },
+      "top1": 0.4605877506179621,
+      "top3": 0.8242241142543257
+    },
+    "ssm|4M|episode-random": {
+      "dba": 0.8299178277039747,
+      "n": 2,
+      "params": 787044,
+      "per_scenario_top3": {
+        "31": 0.8063867440348709,
+        "32": 0.6698095996284871,
+        "33": 0.7540258965676465,
+        "34": 0.7448066333894083
+      },
+      "top1": 0.39793158016283037,
+      "top3": 0.7517627163262928
+    },
+    "ssm|4M|window-random": {
+      "dba": 0.8719765610128687,
+      "n": 2,
+      "params": 787044,
+      "per_scenario_top3": {
+        "31": 0.836075261743998,
+        "32": 0.808747504465693,
+        "33": 0.8077888232270019,
+        "34": 0.8149843995360915
+      },
+      "top1": 0.4561933534743202,
+      "top3": 0.8202416918429003
+    }
+  },
+  "part_b_split_inference": {
+    "analytical_payloads": {
+      "crossover_length_state_vs_features": 160.0,
+      "feature_step_bytes": 512,
+      "note": "SSM state is constant; feature-history & KV-cache grow O(L). State wins beyond ~crossover_length frames.",
+      "per_frame_raw_bytes": 929804,
+      "resume_bytes_by_length": {
+        "8": {
+          "feature_history": 4096,
+          "kv_cache": 32768,
+          "ssm_state_const": 81920
+        },
+        "32": {
+          "feature_history": 16384,
+          "kv_cache": 131072,
+          "ssm_state_const": 81920
+        },
+        "128": {
+          "feature_history": 65536,
+          "kv_cache": 524288,
+          "ssm_state_const": 81920
+        },
+        "1000": {
+          "feature_history": 512000,
+          "kv_cache": 4096000,
+          "ssm_state_const": 81920
+        },
+        "10000": {
+          "feature_history": 5120000,
+          "kv_cache": 40960000,
+          "ssm_state_const": 81920
+        }
+      },
+      "ssm_state_bytes_const": 81920
+    },
+    "feature_quant_pareto": {
+      "bits16": {
+        "dba": 0.8431,
+        "feature_bytes_per_step": 256.0,
+        "top1": 0.4109,
+        "top3": 0.7654
+      },
+      "bits32": {
+        "dba": 0.8431,
+        "feature_bytes_per_step": 512.0,
+        "top1": 0.4106,
+        "top3": 0.7657
+      },
+      "bits4": {
+        "dba": 0.8417,
+        "feature_bytes_per_step": 64.0,
+        "top1": 0.4103,
+        "top3": 0.7634
+      },
+      "bits8": {
+        "dba": 0.8433,
+        "feature_bytes_per_step": 128.0,
+        "top1": 0.4111,
+        "top3": 0.7663
+      }
+    }
+  }
+}

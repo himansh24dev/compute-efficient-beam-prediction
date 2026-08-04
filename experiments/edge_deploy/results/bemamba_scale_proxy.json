@@ -1,0 +1,5 @@
+{"proxy": "resnet50_5frames", "gflops": 20.6, "bemamba_ref_gflops": 23.4,
+ "device": "Raspberry Pi 4 Model B Rev 1.1", "threads": 4,
+ "latency_ms_p50": 2334, "latency_ms_p95": 2338, "hz": 0.43,
+ "ours_w2_ms_p50": 23.6, "ours_w2_hz": 42, "slowdown_vs_ours": 98.9,
+ "note": "Compute-scale proxy for BeMamba (no official code); ResNet-50 backbone over the 5-frame window."}

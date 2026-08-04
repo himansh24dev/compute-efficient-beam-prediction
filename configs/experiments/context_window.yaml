@@ -1,0 +1,67 @@
+# =============================================================================
+# Context-horizon experiment — the linchpin for the KV-cache claim.
+#
+# Question: does beam prediction actually NEED long temporal context?
+# Method:   train the SNAPSHOT task (W past frames -> current beam) at a range of
+#           window lengths W, and plot val accuracy vs W. The W beyond which
+#           accuracy plateaus = the context horizon.
+#
+# Interpretation:
+#   - plateau at small W  -> a fixed small window is cheap AND accurate; the
+#                            unbounded-KV-cache "problem" is weak (a windowed
+#                            Transformer is O(1) too). Re-aim the story to energy /
+#                            split-inference / accuracy-parity.
+#   - accuracy climbs with W -> long history helps -> truncation costs accuracy ->
+#                            the KV cache must grow -> SSM fixed state genuinely wins.
+#
+# Both cores see the same W context (Transformer = full attention over W; SSM =
+# scan over W). Train/val on the frozen split (S31+S32); S33 also eval'd (context).
+# =============================================================================
+
+data_config: "configs/data.yaml"
+seed: 1337
+combo: ["gps", "camera"]          # accuracy sweet spot from Phase 1 (cheapest, cleanest signal)
+cores: ["ssm", "transformer"]
+seeds: [1337, 2024]
+
+windows: [2, 4, 8, 16, 32, 64]
+# Larger windows = more frames/sample -> smaller batch to fit 8 GB VRAM.
+# NOTE: W=32/64 OOM'd on the GPU at batch 32/16 (camera CNN over batch*W frames);
+# reduced to keep batch*W <= ~512 camera frames. Resumable: only W=32/64 re-run.
+batch_by_window: {2: 64, 4: 64, 8: 64, 16: 48, 32: 16, 64: 8}
+
+# CONTROLLED COMPARISON (important): anchors are selected using `anchor_window`,
+# not the per-run window, so EVERY window size trains and evaluates on the exact
+# same samples and differs only in how much context each sample carries.
+# Without this, episodes shorter than W drop out and larger W would silently get
+# less training data + a tiny val set (measured: val 801 -> 25 at W=128), which
+# would confound "long context doesn't help" with "large W had less data".
+anchor_window: 64
+# Resulting fixed sample counts (all W): train 5659 / val 367 / test 2847.
+# NOTE: val n=367 -> ~2.6% standard error at p~0.5; average over seeds and treat
+# differences below ~5 points as within noise. W capped at 64 for this reason
+# (W=128 would leave val n=25, unusable).
+
+model:
+  dim: 128
+  core_layers: 4
+  camera: {width: 32}
+  map: {width: 32}
+  gps: {in_dim: 3, hidden: 128}
+  modality_dropout_p: 0.10
+  param_parity_tol: 0.10
+  ssm: {d_state: 16, d_conv: 4, expand: 2, dt_rank: 8}
+  transformer: {nhead: 4, dim_feedforward: 176, max_len: 128}
+
+train:
+  epochs: 25
+  batch_size: 64                  # overridden per-window by batch_by_window
+  lr: 0.0003
+  weight_decay: 0.05
+  warmup_epochs: 2
+  grad_clip: 1.0
+  label_smoothing: 0.05
+  num_workers: 18
+  prefetch_factor: 3
+
+results_dir: "experiments/context_window/results"

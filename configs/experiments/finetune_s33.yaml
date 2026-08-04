@@ -1,0 +1,43 @@
+# =============================================================================
+# S33 fine-tune — the SINGLE documented day->night adaptation run.
+#
+# CLAUDE.md: "Never tune on the night scenario (33) — it is test-only (zero-shot,
+# then a single documented fine-tune run)." THIS is that run.
+#
+# Protocol (leakage-free): split S33's episodes into train/val/test. Load a
+# DAY-trained checkpoint (from the Phase-1 sweep), measure its ZERO-SHOT accuracy
+# on S33-test, then fine-tune on S33-train (early-stop on S33-val) and re-measure
+# on the SAME S33-test. Reports zero-shot vs fine-tuned -> the day->night recovery.
+#
+# GPS uses the DAY stats (gps_v1.json) throughout — we adapt WEIGHTS, not the
+# preprocessing, and never overwrite the frozen day stats.
+# =============================================================================
+
+day_config: "configs/experiments/phase1.yaml"      # architecture + day-ckpt hash source (MUST match ckpts)
+day_results_dir: "experiments/phase1/results"      # where the day ckpt_*.pt live
+finetune_scenario: 33
+seed: 1337
+
+sweep:
+  modality_combos: [["gps", "camera"]]             # the accuracy sweet spot from Phase 1
+  cores: ["ssm", "transformer"]
+  seeds: [1337, 2024, 7]                           # fine-tune each day-seed's checkpoint
+
+# S33 episode-level split (leakage-free; frozen by split_seed).
+split:
+  fracs: [0.60, 0.20, 0.20]                        # S33 train / val / test episodes
+  split_seed: 33
+
+# Fine-tuning hyperparameters (low LR, few epochs — adapt, don't retrain).
+train:
+  epochs: 20
+  batch_size: 48
+  lr: 0.00008                                      # lower than day training (3e-4)
+  weight_decay: 0.05
+  warmup_epochs: 1
+  grad_clip: 1.0
+  label_smoothing: 0.05
+  num_workers: 16
+  prefetch_factor: 3
+
+results_dir: "experiments/phase1_finetune/results"

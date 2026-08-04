@@ -1,0 +1,42 @@
+# =============================================================================
+# Clean DEPLOYMENT model: cam+gps SSM at W=2 (accuracy-optimal per R7 AND
+# latency-optimal per R11). Trains once per protocol and SAVES the checkpoint so
+# the accuracy we report and the Pi latency we measure come from the SAME weights.
+# Same architecture/scenarios/metrics as R8 (bemamba_compare); only window=2.
+# =============================================================================
+
+data_config: "configs/data.yaml"
+compare_scenarios: [31, 32, 33, 34]
+window: 2                              # deployment window (R7: best accuracy; R11: fastest)
+
+sweep:
+  cores: ["ssm"]
+  combos: ["2M"]                       # cam+gps
+  protocols: ["window-random", "episode-random"]
+  seeds: [1337]
+
+split:
+  train_frac: 0.80
+
+model:
+  dim: 128
+  core_layers: 4
+  camera: {width: 32}
+  gps: {in_dim: 3, hidden: 128}
+  modality_dropout_p: 0.10
+  param_parity_tol: 0.10
+  ssm: {d_state: 16, d_conv: 4, expand: 2, dt_rank: 8}
+  transformer: {nhead: 4, dim_feedforward: 176, max_len: 128}
+
+train:
+  epochs: 50
+  batch_size: 96                       # W=2 windows are small -> large batch fits
+  lr: 0.0003
+  weight_decay: 0.05
+  warmup_epochs: 2
+  grad_clip: 1.0
+  label_smoothing: 0.05
+  num_workers: 12
+  prefetch_factor: 2
+
+results_dir: "experiments/edge_deploy/results"

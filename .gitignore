@@ -1,0 +1,33 @@
+# --- Derived / generated data (rebuildable from raw + configs) ---
+data/derived/cache/
+data/derived/stats/
+!data/derived/splits/          # keep the frozen split manifest (defines the protocol)
+
+# --- Trained weights: large, regenerable from (config + seed). Keep only the two
+#     shipped deployment checkpoints that reproduce the headline numbers. ---
+*.pt
+*.pth
+!experiments/edge_deploy/results/deploy_ssm_w2_window-random_s1337.pt
+!experiments/edge_deploy/results/deploy_ssm_w2_episode-random_s1337.pt
+
+# --- Raw DeepSense scenario data (download separately; never redistributed) ---
+Scenario31/
+Scenario32/
+Scenario33/
+Scenario34/
+
+# --- Regenerable artifacts / noise ---
+experiments/edge_deploy/artifacts/     # ONNX exports (regenerate via export_onnx.py)
+**/results/logs/
+**/*.log
+**/STATUS_*.txt
+**/history_*.csv
+figs/*.png
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+.venv/
+venv/

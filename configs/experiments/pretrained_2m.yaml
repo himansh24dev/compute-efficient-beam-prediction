@@ -1,0 +1,45 @@
+# =============================================================================
+# Accuracy lever: ImageNet-pretrained camera encoder, 2M (cam+gps) config.
+# Same protocol/scenarios/metrics as bemamba_compare (R8) so the ONLY change vs
+# R8's from-scratch 2M numbers is the pretrained encoder -> isolates its effect.
+# Efficiency note: ~1.5M params / ~0.4 GFLOPs (still ~11x/50x lighter than BeMamba).
+# =============================================================================
+
+data_config: "configs/data.yaml"
+compare_scenarios: [31, 32, 33, 34]    # match BeMamba / R8
+window: 5
+
+sweep:
+  cores: ["ssm"]
+  combos: ["2M"]                        # cam+gps only (the deployable config)
+  protocols: ["window-random", "episode-random"]
+  seeds: [1337, 2024]
+  # => 4 runs.
+
+split:
+  train_frac: 0.80
+
+model:
+  dim: 128
+  core_layers: 4
+  camera: {pretrained: true}           # <-- the lever (ImageNet MobileNetV3-small)
+  map: {width: 32}
+  gps: {in_dim: 3, hidden: 128}
+  modality_dropout_p: 0.10
+  param_parity_tol: 0.10
+  ssm: {d_state: 16, d_conv: 4, expand: 2, dt_rank: 8}
+  transformer: {nhead: 4, dim_feedforward: 176, max_len: 128}
+
+train:
+  epochs: 50
+  batch_size: 48                        # pretrained encoder is heavier -> a bit smaller batch
+  lr: 0.0003
+  backbone_lr_scale: 0.1                # pretrained MobileNetV3 backbone fine-tunes at 3e-5 (10x lower)
+  weight_decay: 0.05
+  warmup_epochs: 2
+  grad_clip: 1.0
+  label_smoothing: 0.05
+  num_workers: 12
+  prefetch_factor: 2
+
+results_dir: "experiments/bemamba_compare/results_pretrained"
