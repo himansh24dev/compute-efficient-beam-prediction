@@ -29,19 +29,19 @@ scenarios:
     heldout: false
   32:
     dir: "Scenario32"
-    csv: "scenario32_dev.csv"
+    csv: "scenario32.csv"
     condition: "day"
     role: "train_val"
     heldout: false
   33:
     dir: "Scenario33"
-    csv: "scenario33_dev.csv"
+    csv: "scenario33.csv"
     condition: "night"
     role: "test_zeroshot"           # test-only; NEVER tuned on
     heldout: false
   34:
     dir: "Scenario34"
-    csv: "scenario34_dev.csv"
+    csv: "scenario34.csv"
     condition: "night"
     role: "final_eval_only"
     heldout: true                   # HARD BLOCK unless allow_heldout=True

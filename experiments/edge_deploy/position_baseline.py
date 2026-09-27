@@ -47,7 +47,7 @@ def _metrics_from_scores(scores, targets):
 def main():
     exp = load_yaml("configs/experiments/deploy_w2.yaml")
     cfg = load_data_config(exp["data_config"])
-    tr, te, info = build_compare_loaders(cfg, exp, ["gps"], "episode-random", 1337)
+    tr, va, te, info = build_compare_loaders(cfg, exp, ["gps"], "episode-random", 1337)
     Xtr, Ytr = _collect(tr)
     Xte, Yte = _collect(te)
     nb = int(cfg.beam["num_beams"])
@@ -62,17 +62,27 @@ def main():
     print(f"majority (beam {maj}): {out['majority']}", flush=True)
 
     # --- k-NN over the GPS window (inverse-distance weighted beam votes) ---
-    # brute-force squared distances; measure per-query latency on a sample.
-    for k in (1, 5, 20):
-        d2 = ((Xte[:, None, :] - Xtr[None, :, :]) ** 2).sum(-1)      # (Nte, Ntr)
-        idx = np.argpartition(d2, kth=k - 1, axis=1)[:, :k]           # k nearest
-        scores = np.zeros((len(Xte), nb), np.float32)
-        for i in range(len(Xte)):
+    # k is chosen on the pass-disjoint VALIDATION partition (never on test), then
+    # the chosen k is scored once on the test passes.
+    Xva, Yva = _collect(va)
+
+    def knn_scores(Xq, k):
+        d2 = ((Xq[:, None, :] - Xtr[None, :, :]) ** 2).sum(-1)       # (Nq, Ntr)
+        idx = np.argpartition(d2, kth=k - 1, axis=1)[:, :k]
+        scores = np.zeros((len(Xq), nb), np.float32)
+        for i in range(len(Xq)):
             nn = idx[i]
-            w = 1.0 / (np.sqrt(d2[i, nn]) + 1e-6)
-            np.add.at(scores[i], Ytr[nn], w)
-        out[f"knn{k}"] = _metrics_from_scores(scores, Yte)
-        print(f"knn(k={k}): {out[f'knn{k}']}", flush=True)
+            np.add.at(scores[i], Ytr[nn], 1.0 / (np.sqrt(d2[i, nn]) + 1e-6))
+        return scores
+
+    out["knn_val"] = {}
+    for k in (1, 3, 5, 10, 20, 50):
+        out["knn_val"][k] = _metrics_from_scores(knn_scores(Xva, k), Yva)
+        print(f"val knn(k={k}): {out['knn_val'][k]}", flush=True)
+    k_best = max(out["knn_val"], key=lambda k: out["knn_val"][k]["dba"])
+    out["knn_k_selected_on_val"] = int(k_best)
+    out["knn_test"] = _metrics_from_scores(knn_scores(Xte, k_best), Yte)
+    print(f"TEST knn(k={k_best}, chosen on val): {out['knn_test']}", flush=True)
 
     # --- latency of a single k=20 query (brute force over the train set) ---
     q = Xte[0]
@@ -84,11 +94,9 @@ def main():
     out["knn_query_ms"] = round(lat_ms, 3)
     print(f"\nk-NN brute-force query latency (train={len(Xtr)}): {lat_ms:.3f} ms/query", flush=True)
 
-    out["deployed_model_ref"] = {"dba": 0.865, "top3": 0.809, "top1": 0.434, "latency_ms": 23.6}
-    save_json(out, "experiments/edge_deploy/results/position_baseline.json")
-    print("\nsaved -> results/position_baseline.json")
-    print(f"\nREFERENCE deployed cam+GPS model: DBA 0.865 / Top-3 0.809 @ 23.6 ms")
-    print("If knn DBA ~ 0.85, the camera branch must justify its ~19 ms elsewhere (C3).")
+    exp_out = "experiments/revision/results/position_baseline.json"
+    save_json(out, exp_out)
+    print(f"\nsaved -> {exp_out}")
 
 
 if __name__ == "__main__":

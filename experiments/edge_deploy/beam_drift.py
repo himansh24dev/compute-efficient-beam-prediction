@@ -28,7 +28,8 @@ def scenario_csv(sid):
 
 
 def main():
-    LAT = 0.0495           # our end-to-end latency (s)
+    import os, sys, json
+    LAT = float(os.environ.get("LAT_MS", "49.5")) / 1000.0   # latency / staleness (s)
     DELTA = 5              # DBA tolerance (beam indices)
     dts, dbeam, drift, speeds = [], [], [], []
     for sid in (31, 32, 33, 34):
@@ -67,6 +68,11 @@ def main():
     print(f"  P(drift > Delta={DELTA}) = {100*(drift>DELTA).mean():.1f}%   "
           f"P(drift >= 1) = {100*(drift>=1).mean():.0f}%")
     ang = 100.0 / 64                          # ~1.6 deg per index (approx, +-50deg / 64)
+    os.makedirs("experiments/revision/results", exist_ok=True)
+    json.dump({"lat_ms": LAT * 1e3, "pairs": len(dts), "dt_median_ms": float(np.median(dts) * 1e3),
+               "drift_median": float(np.median(drift)), "drift_mean": float(drift.mean()),
+               "drift_p95": float(np.percentile(drift, 95)), "p_drift_gt_delta": float((drift > DELTA).mean())},
+              open(f"experiments/revision/results/beam_drift_{LAT*1e3:.1f}ms.json", "w"), indent=1)
     print(f"  median drift {np.median(drift):.2f} indices ~ {np.median(drift)*1.6:.1f} deg "
           f"(one index ~1.6 deg; Delta=5 ~8 deg ~ one beamwidth)")
 

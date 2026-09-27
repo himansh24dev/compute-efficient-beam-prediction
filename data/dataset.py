@@ -192,6 +192,8 @@ def make_snapshot_dataset(cfg: DataConfig, episodes: list[Episode], gps_stats: d
             windows.append((ep.scenario_id, t))
 
     class SnapshotDataset(Dataset):
+        anchors = windows                     # [(scenario_id, row_of_t)], in index order
+
         def __len__(self):
             return len(windows)
 
@@ -213,6 +215,9 @@ def make_snapshot_dataset(cfg: DataConfig, episodes: list[Episode], gps_stats: d
                      for h in horizons]
                 ) if horizons else torch.empty(0, dtype=torch.long),
                 "scenario_id": torch.as_tensor(scenario_id, dtype=torch.long),
+                # absolute row of the anchor frame t -> maps each sample back to its
+                # pass (episode) for pass-level / paired bootstrap analyses
+                "row": torch.as_tensor(t, dtype=torch.long),
             }
             return item
 

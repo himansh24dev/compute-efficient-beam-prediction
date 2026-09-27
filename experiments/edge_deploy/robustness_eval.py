@@ -49,7 +49,7 @@ def main():
                     "expand": c["expand"], "dt_rank": c["dt_rank"]}}
     model = BeamModel(["gps", "camera"], 64, "ssm", mcfg).to(device)
     model.load_state_dict(obj["model"])
-    _, te, _ = build_compare_loaders(cfg, exp, ["gps", "camera"], "episode-random", 1337)
+    _, _, te, _ = build_compare_loaders(cfg, exp, ["gps", "camera"], "episode-random", 1337)
 
     out = {}
     for drop, name in [(None, "both"), ("camera", "camera_dropped"), ("gps", "gps_dropped")]:

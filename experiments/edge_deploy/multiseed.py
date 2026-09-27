@@ -88,7 +88,7 @@ def run_ensemble(cfg, exp, device, core, seeds, protocol, out):
         r = train_one(cfg, exp, core, combo, protocol, split, device=device, init_seed=s)
         states.append(r["best_state"]); singles.append(float(r["test"]["dba"]))
         print(f"  init s{s} (split {split}): dba={r['test']['dba']:.4f}", flush=True)
-    _, te, _ = build_compare_loaders(cfg, exp, combo, protocol, split)
+    _, _, te, _ = build_compare_loaders(cfg, exp, combo, protocol, split)
     nb = int(cfg.beam["num_beams"])
     probs = None; Y = None
     for st in states:

@@ -39,7 +39,8 @@ def main():
         ref = wrap(gps).numpy()
     path = os.path.join(out_dir, "beam_gps_fp32.onnx")
     torch.onnx.export(wrap, (gps,), path, input_names=["gps"], output_names=["logits"],
-                      dynamic_axes={"gps": {0: "batch"}}, opset_version=17, do_constant_folding=True)
+                      dynamic_axes={"gps": {0: "batch"}}, opset_version=17, do_constant_folding=True,
+                      dynamo=False)
     print(f"exported -> {path} ({os.path.getsize(path)/1e3:.0f} KB)")
 
     import onnxruntime as ort

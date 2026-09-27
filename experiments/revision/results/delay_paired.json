@@ -1,0 +1,78 @@
+{
+ "val": {
+  "staleness_cost_t+1 (cur@t+1 - cur@t)": {
+   "dDBA": -0.0107,
+   "lo": -0.0183,
+   "hi": -0.0048,
+   "p": 0.0
+  },
+  "staleness_cost_t+2 (cur@t+2 - cur@t)": {
+   "dDBA": -0.0359,
+   "lo": -0.0532,
+   "hi": -0.0229,
+   "p": 0.0
+  },
+  "retrain_gain_t+1 (fut1@t+1 - cur@t+1)": {
+   "dDBA": 0.0014,
+   "lo": -0.0103,
+   "hi": 0.0127,
+   "p": 0.7604
+  },
+  "retrain_gain_t+2 (fut2@t+2 - cur@t+2)": {
+   "dDBA": 0.0196,
+   "lo": 0.0022,
+   "hi": 0.0387,
+   "p": 0.0272
+  },
+  "future_hardness_t+1 (fut1@t+1 - cur@t)": {
+   "dDBA": -0.0093,
+   "lo": -0.0188,
+   "hi": -0.0005,
+   "p": 0.032
+  },
+  "future_hardness_t+2 (fut2@t+2 - cur@t)": {
+   "dDBA": -0.0163,
+   "lo": -0.0271,
+   "hi": -0.0062,
+   "p": 0.0
+  }
+ },
+ "__last": {
+  "staleness_cost_t+1 (cur@t+1 - cur@t)": {
+   "dDBA": -0.0119,
+   "lo": -0.0189,
+   "hi": -0.0067,
+   "p": 0.0
+  },
+  "staleness_cost_t+2 (cur@t+2 - cur@t)": {
+   "dDBA": -0.0384,
+   "lo": -0.055,
+   "hi": -0.0267,
+   "p": 0.0
+  },
+  "retrain_gain_t+1 (fut1@t+1 - cur@t+1)": {
+   "dDBA": 0.0051,
+   "lo": -0.0023,
+   "hi": 0.0132,
+   "p": 0.1768
+  },
+  "retrain_gain_t+2 (fut2@t+2 - cur@t+2)": {
+   "dDBA": 0.0285,
+   "lo": 0.0168,
+   "hi": 0.0439,
+   "p": 0.0
+  },
+  "future_hardness_t+1 (fut1@t+1 - cur@t)": {
+   "dDBA": -0.0067,
+   "lo": -0.0126,
+   "hi": -0.0012,
+   "p": 0.014
+  },
+  "future_hardness_t+2 (fut2@t+2 - cur@t)": {
+   "dDBA": -0.0099,
+   "lo": -0.0185,
+   "hi": -0.0025,
+   "p": 0.0068
+  }
+ }
+}

@@ -167,7 +167,7 @@ def main():
         model.load_state_dict(state)
         if channels_last(cfg):
             model = model.to(memory_format=torch.channels_last)
-        _, te, _ = build_compare_loaders(cfg, exp, combo, "episode-random", seed)
+        _, _, te, _ = build_compare_loaders(cfg, exp, combo, "episode-random", seed)
         quant = feature_quant_accuracy(model, te, cfg, device)
         print("  payload-quantization Pareto (fused feature):")
         for bits, m in quant.items():

@@ -61,7 +61,7 @@ def main():
     exp = load_yaml(args.config)
     cfg = load_data_config(exp["data_config"])
     seed = int(exp["sweep"]["seeds"][0])
-    tr, te, _ = build_compare_loaders(cfg, exp, ["gps", "camera"], args.protocol, seed)
+    tr, _va, te, _ = build_compare_loaders(cfg, exp, ["gps", "camera"], args.protocol, seed)
 
     reader = RealWindowReader(tr, args.ncal)
     print(f"calibrating on {len(reader.samples)} real windows ...")
