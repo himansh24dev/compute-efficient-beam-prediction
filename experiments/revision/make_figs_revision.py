@@ -31,38 +31,39 @@ def save(fig, name):
 
 
 def deploy():
-    half = None
-    p = f"{RES}/pi/replica_half_t4.json"
-    if os.path.isfile(p):                       # measured on the Pi (half-budget reconstruction)
-        d = json.load(open(p)); half = (d["gmacs"], d["burst_ms"]["p50"])
-    fig, ax = plt.subplots(figsize=(5.9, 4.2))
+    pi = json.load(open(f"{RES}/pi/pi_summary.json"))
+    info = json.load(open("experiments/revision/pi/bundle/models/models_info.json"))
+    ours = pi["fwd_deploy_fp32_t4_control"]["p50"]          # same session as the reconstructions
+    full = (info["replica_full"]["gmacs"], pi["replica_full_t4"]["p50"])
+    half = (info["replica_half"]["gmacs"], pi["replica_half_t4"]["p50"])
+    fig, ax = plt.subplots(figsize=(6.2, 5.6))
     ax.set_xscale("log"); ax.set_yscale("log")
     ax.set_xlim(0.05, 75); ax.set_ylim(9, 6000)
     ax.axhspan(9, 100, color=TEAL, alpha=0.10, zorder=0)
     ax.axhspan(100, 6000, color=CORAL, alpha=0.08, zorder=0)
     ax.axhline(100, color=SLATE, ls=(0, (6, 4)), lw=1.3, zorder=1)
-    ax.text(64, 11.5, "real-time zone", color=TEAL, fontsize=8.5, va="bottom", ha="right",
+    ax.text(0.06, 11.5, "real-time zone", color=TEAL, fontsize=8.5, va="bottom", ha="left",
             style="italic", alpha=0.7)
     ax.text(64, 5200, "too slow", color=CORAL, fontsize=8.5, va="top", ha="right",
             style="italic", alpha=0.7)
     ax.text(19, 108, "100 ms deadline", color=SLATE, fontsize=8.2, va="bottom", ha="right")
-    ax.plot([0.097, 23.41], [23.6, 2580], ls=(0, (1, 1.8)), color="#AEBBC0", lw=1.7, zorder=1)
-    ax.text(2.4, 430, r"$\approx$109$\times$", color=SLATE, fontsize=11.5, ha="center",
+    ax.plot([0.097, full[0]], [ours, full[1]], ls=(0, (1, 1.8)), color="#AEBBC0", lw=1.7, zorder=1)
+    ax.text(2.4, 430, r"$\approx$%d$\times$" % round(full[1] / ours), color=SLATE, fontsize=11.5, ha="center",
             va="center", fontweight="bold", path_effects=HALO, zorder=3)
-    ax.scatter([0.097], [23.6], s=150, marker="o", color=TEAL, edgecolor="white",
+    ax.scatter([0.097], [ours], s=150, marker="o", color=TEAL, edgecolor="white",
                linewidth=1.6, zorder=6, path_effects=HALO,
-               label="Ours (measured model)\n0.59 M · 0.097 GMACs\n23.6 ms · 42 Hz")
-    ax.scatter([23.41], [2580], s=150, marker="o", color=CORAL, edgecolor="white",
+               label=f"Ours (measured model)\n0.59 M · 0.097 GMACs\n{ours:.1f} ms · {1000/ours:.0f} Hz")
+    ax.scatter([full[0]], [full[1]], s=150, marker="o", color=CORAL, edgecolor="white",
                linewidth=1.6, zorder=6, path_effects=HALO,
-               label="Reconstruction at the\npublished SOTA budget\n16.27 M · 23.41 GMACs\n2580 ms · 0.4 Hz")
+               label=f"Reconstruction at the\npublished SOTA budget\n16.27 M · {full[0]:.2f} GMACs\n{full[1]:.0f} ms · {1000/full[1]:.2f} Hz")
     ax.scatter([20.6], [2334], s=90, marker="s", color=SLATE, edgecolor="white",
                linewidth=1.4, zorder=5, path_effects=HALO,
-               label="ResNet-50 × 5 frames\n20.6 GMACs · 2334 ms")
+               label="ResNet-50 × 5 frames\n20.6 GMACs · 2334 ms (earlier session)")
     if half is not None:
         ax.scatter([half[0]], [half[1]], s=110, marker="D", color=SAND, edgecolor="white",
                    linewidth=1.4, zorder=5, path_effects=HALO,
-                   label=f"Reconstruction at half budget\n{half[0]:.1f} GMACs · {half[1]:.0f} ms")
-    leg = ax.legend(loc="upper left", fontsize=7.6, frameon=True, framealpha=0.94,
+                   label=f"Reconstruction at half budget\n(\"23.4 GFLOPs\" as true FLOPs)\n{half[0]:.2f} GMACs · {half[1]:.0f} ms")
+    leg = ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.17), ncol=2, fontsize=7.6, frameon=True, framealpha=0.94,
                     edgecolor="#CDD6DA", borderpad=0.7, labelspacing=0.9,
                     handletextpad=0.8, borderaxespad=0.7)
     leg.get_frame().set_linewidth(0.9)
@@ -73,6 +74,29 @@ def deploy():
     ax.grid(True, which="major", color=GRID, lw=0.8, zorder=0)
     _clean(ax)
     save(fig, "deploy")
+
+
+def threads():
+    pi = json.load(open(f"{RES}/pi/pi_summary.json"))
+    t = [1, 2, 3, 4]; lat = [pi[f"fwd_deploy_fp32_t{k}"]["p50"] for k in t]; hz = [1000 / v for v in lat]
+    fig, ax = plt.subplots(figsize=(5.5, 3.9))
+    ax.bar(t, lat, width=0.6, color=TEAL, alpha=0.85, edgecolor=INK, lw=0.8, hatch="////", zorder=3)
+    for bi, (v, h) in enumerate(zip(lat, hz)):
+        ax.text(t[bi], v + 1.0, r"$\bf{%.1f}$ ms" % v + f"\n{h:.0f} Hz", ha="center", va="bottom",
+                fontsize=9, color=INK, linespacing=1.25)
+    ax.set_ylim(0, 58); ax.set_xlim(0.45, 4.55); ax.set_xticks(t)
+    ax.set_xlabel("CPU threads", fontsize=10.5); ax.set_ylabel("Pi 4 forward pass  (ms, p50)", fontsize=10.5)
+    yspan = 51.0
+    ax.annotate("", xy=(4, yspan), xytext=(1, yspan), arrowprops=dict(arrowstyle="<|-|>", color=SLATE,
+                lw=1.1, alpha=0.85, shrinkA=0, shrinkB=0))
+    ax.text(2.5, yspan + 1.4, r"$%.1f\times$ faster (1$\to$4 cores)" % (lat[0] / lat[-1]), fontsize=9.2,
+            color=SLATE, style="italic", ha="center", va="bottom")
+    ax.annotate("real-time even\non a single core", xy=(1.30, lat[0] - 1.5), xytext=(2.6, 35.5), fontsize=8.8,
+                color="#1F7A6E", style="italic", ha="center", va="center", linespacing=1.2,
+                arrowprops=dict(arrowstyle="->", color="#1F7A6E", lw=1.1, alpha=0.85, connectionstyle="arc3,rad=0.22"))
+    ax.grid(True, axis="y", color=GRID, lw=0.8, zorder=0)
+    _clean(ax)
+    save(fig, "threads")
 
 
 def robustness():
@@ -128,5 +152,6 @@ def robustness():
 
 if __name__ == "__main__":
     deploy()
+    threads()
     if os.path.isfile(f"{RES}/robustness.json"):
         robustness()

@@ -1,0 +1,32 @@
+
+=== per-op-type kernel time: deploy_fp32.onnx (W=2) ===
+op                  ms/inf      %
+FusedConv            21.32   65.2
+Mul                   1.48    4.5
+Gather                1.38    4.2
+MatMul                1.36    4.1
+Unsqueeze             1.17    3.6
+Add                   0.85    2.6
+Einsum                0.68    2.1
+Slice                 0.57    1.7
+Concat                0.48    1.5
+Shape                 0.38    1.1
+Exp                   0.37    1.1
+Conv                  0.35    1.1
+Softplus              0.34    1.0
+Gemm                  0.28    0.9
+Transpose             0.28    0.9
+QuickGelu             0.27    0.8
+SimplifiedLayerNormalization      0.22    0.7
+Split                 0.17    0.5
+ConstantOfShape       0.12    0.4
+Div                   0.12    0.4
+Reshape               0.09    0.3
+GlobalAveragePool      0.08    0.3
+Squeeze               0.06    0.2
+Flatten               0.06    0.2
+Softmax               0.06    0.2
+LayerNormalization      0.06    0.2
+ReduceSum             0.05    0.2
+Gelu                  0.04    0.1
+TOTAL(kernels)       32.69  100.0

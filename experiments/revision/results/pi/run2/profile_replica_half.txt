@@ -1,0 +1,27 @@
+
+=== per-op-type kernel time: replica_half.onnx (W=5) ===
+op                  ms/inf      %
+FusedConv          1721.39   96.4
+FusedGemm            17.78    1.0
+MaxPool              13.33    0.7
+GlobalAveragePool      5.64    0.3
+Mul                   4.87    0.3
+MatMul                4.36    0.2
+Einsum                2.41    0.1
+Add                   1.84    0.1
+Exp                   1.76    0.1
+Gemm                  1.70    0.1
+Split                 1.62    0.1
+Squeeze               1.50    0.1
+Softplus              1.44    0.1
+Unsqueeze             1.21    0.1
+Gather                0.79    0.0
+Reshape               0.68    0.0
+Conv                  0.59    0.0
+QuickGelu             0.55    0.0
+Transpose             0.45    0.0
+SimplifiedLayerNormalization      0.36    0.0
+Concat                0.35    0.0
+Slice                 0.31    0.0
+Flatten               0.26    0.0
+TOTAL(kernels)     1785.20  100.0

@@ -1,0 +1,49 @@
+{
+  "model": "deploy_int8_selective.onnx",
+  "backend": "cv2",
+  "window": 2,
+  "threads": 4,
+  "frames": 120,
+  "timed_steps": 300,
+  "peak_rss_mb": 120.2,
+  "onnxruntime": "1.28.0",
+  "platform": "Linux-6.18.50+rpt-rpi-v8-aarch64-with-glibc2.41",
+  "stages_ms": {
+    "decode": {
+      "p50": 9.845,
+      "p95": 10.422,
+      "p99": 10.451
+    },
+    "resize": {
+      "p50": 9.258,
+      "p95": 9.732,
+      "p99": 9.781
+    },
+    "normalize": {
+      "p50": 2.986,
+      "p95": 3.038,
+      "p99": 3.072
+    },
+    "marshal": {
+      "p50": 0.904,
+      "p95": 1.05,
+      "p99": 1.06
+    },
+    "infer": {
+      "p50": 19.128,
+      "p95": 19.245,
+      "p99": 19.311
+    },
+    "argmax": {
+      "p50": 0.035,
+      "p95": 0.036,
+      "p99": 0.079
+    },
+    "total": {
+      "p50": 42.168,
+      "p95": 42.782,
+      "p99": 42.849
+    }
+  },
+  "rate_hz_p50": 23.71
+}

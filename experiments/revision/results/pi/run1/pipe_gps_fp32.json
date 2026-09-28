@@ -1,0 +1,49 @@
+{
+  "model": "gps_fp32.onnx",
+  "backend": "cv2",
+  "window": 2,
+  "threads": 4,
+  "frames": 120,
+  "timed_steps": 300,
+  "peak_rss_mb": 99.7,
+  "onnxruntime": "1.28.0",
+  "platform": "Linux-6.18.50+rpt-rpi-v8-aarch64-with-glibc2.41",
+  "stages_ms": {
+    "decode": {
+      "p50": 0.0,
+      "p95": 0.0,
+      "p99": 0.0
+    },
+    "resize": {
+      "p50": 0.0,
+      "p95": 0.0,
+      "p99": 0.0
+    },
+    "normalize": {
+      "p50": 0.0,
+      "p95": 0.0,
+      "p99": 0.0
+    },
+    "marshal": {
+      "p50": 0.062,
+      "p95": 0.065,
+      "p99": 0.106
+    },
+    "infer": {
+      "p50": 3.525,
+      "p95": 3.565,
+      "p99": 3.607
+    },
+    "argmax": {
+      "p50": 0.034,
+      "p95": 0.035,
+      "p99": 0.036
+    },
+    "total": {
+      "p50": 3.622,
+      "p95": 3.66,
+      "p99": 3.705
+    }
+  },
+  "rate_hz_p50": 276.09
+}

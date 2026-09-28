@@ -1,0 +1,373 @@
+{
+  "model": "deploy_fp32.onnx",
+  "backend": "cv2",
+  "window": 2,
+  "threads": 4,
+  "frames": 120,
+  "timed_steps": 3147,
+  "peak_rss_mb": 118.2,
+  "onnxruntime": "1.28.0",
+  "platform": "Linux-6.18.50+rpt-rpi-v8-aarch64-with-glibc2.41",
+  "stages_ms": {
+    "decode": {
+      "p50": 9.891,
+      "p95": 10.546,
+      "p99": 12.47
+    },
+    "resize": {
+      "p50": 9.253,
+      "p95": 9.632,
+      "p99": 11.896
+    },
+    "normalize": {
+      "p50": 2.961,
+      "p95": 3.043,
+      "p99": 4.16
+    },
+    "marshal": {
+      "p50": 0.906,
+      "p95": 1.039,
+      "p99": 1.082
+    },
+    "infer": {
+      "p50": 23.545,
+      "p95": 28.015,
+      "p99": 33.221
+    },
+    "argmax": {
+      "p50": 0.034,
+      "p95": 0.035,
+      "p99": 0.068
+    },
+    "total": {
+      "p50": 46.587,
+      "p95": 52.747,
+      "p99": 58.422
+    }
+  },
+  "rate_hz_p50": 21.47,
+  "soak": {
+    "seconds": 150.0,
+    "p50_first10s_ms": 46.476,
+    "p50_last10s_ms": 46.301,
+    "samples": [
+      [
+        2.4,
+        53.5,
+        "throttled=0xe0000"
+      ],
+      [
+        4.7,
+        55.0,
+        "throttled=0xe0000"
+      ],
+      [
+        7.1,
+        56.0,
+        "throttled=0xe0000"
+      ],
+      [
+        9.4,
+        56.4,
+        "throttled=0xe0000"
+      ],
+      [
+        11.8,
+        58.4,
+        "throttled=0xe0000"
+      ],
+      [
+        14.2,
+        58.4,
+        "throttled=0xe0000"
+      ],
+      [
+        16.5,
+        59.9,
+        "throttled=0xe0000"
+      ],
+      [
+        18.9,
+        60.8,
+        "throttled=0xe0000"
+      ],
+      [
+        21.3,
+        60.8,
+        "throttled=0xe0000"
+      ],
+      [
+        23.6,
+        62.3,
+        "throttled=0xe0000"
+      ],
+      [
+        26.0,
+        62.3,
+        "throttled=0xe0000"
+      ],
+      [
+        28.3,
+        62.8,
+        "throttled=0xe0000"
+      ],
+      [
+        30.7,
+        63.7,
+        "throttled=0xe0000"
+      ],
+      [
+        33.1,
+        64.2,
+        "throttled=0xe0000"
+      ],
+      [
+        35.5,
+        64.7,
+        "throttled=0xe0000"
+      ],
+      [
+        37.8,
+        65.7,
+        "throttled=0xe0000"
+      ],
+      [
+        40.2,
+        66.7,
+        "throttled=0xe0000"
+      ],
+      [
+        42.5,
+        66.2,
+        "throttled=0xe0000"
+      ],
+      [
+        44.9,
+        65.7,
+        "throttled=0xe0000"
+      ],
+      [
+        47.3,
+        66.2,
+        "throttled=0xe0000"
+      ],
+      [
+        49.8,
+        65.7,
+        "throttled=0xe0000"
+      ],
+      [
+        52.1,
+        65.7,
+        "throttled=0xe0000"
+      ],
+      [
+        54.5,
+        66.7,
+        "throttled=0xe0000"
+      ],
+      [
+        56.8,
+        65.7,
+        "throttled=0xe0000"
+      ],
+      [
+        59.2,
+        64.2,
+        "throttled=0xe0000"
+      ],
+      [
+        61.6,
+        63.7,
+        "throttled=0xe0000"
+      ],
+      [
+        63.9,
+        63.3,
+        "throttled=0xe0000"
+      ],
+      [
+        66.3,
+        62.8,
+        "throttled=0xe0000"
+      ],
+      [
+        68.7,
+        62.3,
+        "throttled=0xe0000"
+      ],
+      [
+        71.0,
+        62.8,
+        "throttled=0xe0000"
+      ],
+      [
+        73.4,
+        61.8,
+        "throttled=0xe0000"
+      ],
+      [
+        75.8,
+        61.8,
+        "throttled=0xe0000"
+      ],
+      [
+        78.1,
+        60.8,
+        "throttled=0xe0000"
+      ],
+      [
+        80.5,
+        61.3,
+        "throttled=0xe0000"
+      ],
+      [
+        82.9,
+        59.9,
+        "throttled=0xe0000"
+      ],
+      [
+        85.3,
+        60.3,
+        "throttled=0xe0000"
+      ],
+      [
+        87.6,
+        59.9,
+        "throttled=0xe0000"
+      ],
+      [
+        90.0,
+        60.3,
+        "throttled=0xe0000"
+      ],
+      [
+        92.4,
+        60.8,
+        "throttled=0xe0000"
+      ],
+      [
+        94.7,
+        61.8,
+        "throttled=0xe0000"
+      ],
+      [
+        97.1,
+        61.8,
+        "throttled=0xe0000"
+      ],
+      [
+        99.4,
+        62.3,
+        "throttled=0xe0000"
+      ],
+      [
+        101.8,
+        62.8,
+        "throttled=0xe0000"
+      ],
+      [
+        104.2,
+        64.2,
+        "throttled=0xe0000"
+      ],
+      [
+        106.6,
+        64.7,
+        "throttled=0xe0000"
+      ],
+      [
+        108.9,
+        64.7,
+        "throttled=0xe0000"
+      ],
+      [
+        111.4,
+        65.2,
+        "throttled=0xe0000"
+      ],
+      [
+        113.8,
+        66.7,
+        "throttled=0xe0000"
+      ],
+      [
+        116.1,
+        66.2,
+        "throttled=0xe0000"
+      ],
+      [
+        118.5,
+        66.7,
+        "throttled=0xe0000"
+      ],
+      [
+        120.9,
+        67.2,
+        "throttled=0xe0000"
+      ],
+      [
+        123.2,
+        68.1,
+        "throttled=0xe0000"
+      ],
+      [
+        125.7,
+        68.6,
+        "throttled=0xe0000"
+      ],
+      [
+        128.0,
+        68.1,
+        "throttled=0xe0000"
+      ],
+      [
+        130.4,
+        69.6,
+        "throttled=0xe0000"
+      ],
+      [
+        132.8,
+        70.6,
+        "throttled=0xe0000"
+      ],
+      [
+        135.1,
+        69.1,
+        "throttled=0xe0000"
+      ],
+      [
+        137.5,
+        71.1,
+        "throttled=0xe0000"
+      ],
+      [
+        139.8,
+        72.0,
+        "throttled=0xe0000"
+      ],
+      [
+        142.1,
+        70.1,
+        "throttled=0xe0000"
+      ],
+      [
+        144.5,
+        70.6,
+        "throttled=0xe0000"
+      ],
+      [
+        146.8,
+        69.6,
+        "throttled=0xe0000"
+      ],
+      [
+        149.2,
+        68.1,
+        "throttled=0xe0000"
+      ]
+    ],
+    "temp_peak_c": 72.0,
+    "ever_throttled": true
+  }
+}

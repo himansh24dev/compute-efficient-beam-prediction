@@ -113,8 +113,47 @@ def table_split():
     return "\n".join(out)
 
 
+def table_pi():
+    pi = json.load(open(R / "pi" / "pi_summary.json"))
+    rows = [("Deployed, fp32, 1 thread", "fwd_deploy_fp32_t1"), ("Deployed, fp32, 2 threads", "fwd_deploy_fp32_t2"),
+            ("Deployed, fp32, 3 threads", "fwd_deploy_fp32_t3"), ("Deployed, fp32, 4 threads", "fwd_deploy_fp32_t4"),
+            ("Deployed, fp32 (control, session 2)", "fwd_deploy_fp32_t4_control"),
+            ("Deployed, INT8 whole model", "fwd_deploy_int8_t4"), ("Deployed, INT8 convolutions only", "fwd_deploy_int8_selective_t4"),
+            ("GPS only", "fwd_gps_fp32_t4"), ("Camera only", "fwd_cam_fp32_t4"),
+            ("Core: Transformer", "fwd_core_transformer_t4"), ("Core: GRU", "fwd_core_gru_t4"),
+            ("Core: LSTM", "fwd_core_lstm_t4"), ("Core: MLP", "fwd_core_mlp_t4"),
+            ("Window $W{=}4$", "fwd_win_w4_t4"), ("Window $W{=}5$", "fwd_win_w5_t4"),
+            ("Window $W{=}8$", "fwd_win_w8_t4"), ("Window $W{=}16$", "fwd_win_w16_t4"),
+            ("+ LiDAR", "fwd_abl_lidar_t4"), ("+ LiDAR + radar", "fwd_abl_lidar_radar_t4"),
+            ("ImageNet-pretrained encoder", "fwd_abl_pretrained_t4"), ("2 SSM layers", "fwd_abl_L2_t4"),
+            ("6 SSM layers", "fwd_abl_L6_t4"), ("Mean fusion", "fwd_abl_fuse_mean_t4"),
+            ("Concat fusion", "fwd_abl_fuse_concat_t4"),
+            ("Reconstruction, full budget (23.41 GMACs)", "replica_full_t4"),
+            ("Reconstruction, half budget (11.58 GMACs)", "replica_half_t4")]
+    sess = {"run1": "1", "run2": "2"}
+    out = [r"\begin{table}[ht]\centering",
+           r"\caption{All forward-pass measurements on the Raspberry~Pi~4 (fp32 unless stated, four threads unless "
+           r"stated, batch 1; latency percentiles in ms). Session~1 runs were not thermally controlled but the board's "
+           r"sticky throttle-history flags were clear after them; session~2 runs started at $\le$50$^\circ$C with "
+           r"1\,s thermal logging, and none showed an active throttling flag or a clock below 1.5~GHz. Session~2 tail "
+           r"percentiles include the small overhead of the 1\,s thermal sampler.}",
+           r"\label{tab:s5}\footnotesize\setlength{\tabcolsep}{4pt}",
+           r"\begin{tabular}{lcccccc}\toprule Model & p50 & p95 & p99 & Rate (Hz) & Runs & Session \\ \midrule"]
+    for lab, k in rows:
+        v = pi[k]
+        out.append(f"{lab} & {v['p50']:.2f} & {v['p95']:.2f} & {v['p99']:.2f} & {v['hz']:.1f} & {v['runs']} & {sess[pi['source'][k]]} \\\\")
+    out.append(r"\midrule \multicolumn{7}{l}{\emph{Processing pipeline (stored 960$\times$540 JPEG to beam decision; total latency in ms)}} \\")
+    for lab, k in (("fp32, OpenCV (as in training)", "pipe_deploy_fp32_cv2"), ("fp32, PIL bilinear", "pipe_deploy_fp32_pil"),
+                   ("INT8 whole model, OpenCV", "pipe_deploy_int8_cv2"), ("INT8 convolutions only, OpenCV", "pipe_deploy_int8_selective_cv2"),
+                   ("GPS only", "pipe_gps_fp32"), ("150\\,s thermal soak, fp32, OpenCV", "soak_deploy_fp32_cv2")):
+        v = pi[k]
+        out.append(f"{lab} & {v['total_p50']:.2f} & {v['total_p95']:.2f} & {v['total_p99']:.2f} & {v['rate_hz']:.1f} & {v['steps']} & {sess[pi['source'][k]]} \\\\")
+    out.append(r"\bottomrule\end{tabular}\end{table}")
+    return "\n".join(out)
+
+
 def main():
-    parts = [table_s1(), table_seeds(), table_robust(), table_split()]
+    parts = [table_s1(), table_seeds(), table_robust(), table_split(), table_pi()]
     OUT.write_text("\n\n".join(parts) + "\n")
     print(f"wrote {OUT}")
 
