@@ -1,0 +1,6 @@
+{
+ "model": "torchvision resnet50 (random init) over 5 frames",
+ "gmacs": 20.558,
+ "params": 25557032,
+ "max_err": 4.1961669921875e-05
+}

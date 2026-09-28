@@ -129,8 +129,9 @@ def table_pi():
             ("6 SSM layers", "fwd_abl_L6_t4"), ("Mean fusion", "fwd_abl_fuse_mean_t4"),
             ("Concat fusion", "fwd_abl_fuse_concat_t4"),
             ("Reconstruction, full budget (23.41 GMACs)", "replica_full_t4"),
-            ("Reconstruction, half budget (11.58 GMACs)", "replica_half_t4")]
-    sess = {"run1": "1", "run2": "2"}
+            ("Reconstruction, half budget (11.58 GMACs)", "replica_half_t4"),
+            ("ResNet-50 over 5 frames (20.56 GMACs)", "resnet50_5frames_t4")]
+    sess = {"run1": "1", "run2": "2", "run3": "2"}
     out = [r"\begin{table}[ht]\centering",
            r"\caption{All forward-pass measurements on the Raspberry~Pi~4 (fp32 unless stated, four threads unless "
            r"stated, batch 1; latency percentiles in ms). Session~1 runs were not thermally controlled but the board's "

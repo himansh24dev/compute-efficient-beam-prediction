@@ -56,9 +56,10 @@ def deploy():
     ax.scatter([full[0]], [full[1]], s=150, marker="o", color=CORAL, edgecolor="white",
                linewidth=1.6, zorder=6, path_effects=HALO,
                label=f"Reconstruction at the\npublished SOTA budget\n16.27 M · {full[0]:.2f} GMACs\n{full[1]:.0f} ms · {1000/full[1]:.2f} Hz")
-    ax.scatter([20.6], [2334], s=90, marker="s", color=SLATE, edgecolor="white",
+    rn = pi["resnet50_5frames_t4"]["p50"]
+    ax.scatter([20.56], [rn], s=90, marker="s", color=SLATE, edgecolor="white",
                linewidth=1.4, zorder=5, path_effects=HALO,
-               label="ResNet-50 × 5 frames\n20.6 GMACs · 2334 ms (earlier session)")
+               label=f"ResNet-50 × 5 frames\n20.56 GMACs · {rn:.0f} ms")
     if half is not None:
         ax.scatter([half[0]], [half[1]], s=110, marker="D", color=SAND, edgecolor="white",
                    linewidth=1.4, zorder=5, path_effects=HALO,

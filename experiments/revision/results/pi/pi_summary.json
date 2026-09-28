@@ -28,6 +28,7 @@
   "fwd_win_w5_t4": "run2",
   "fwd_win_w8_t4": "run2",
   "fwd_win_w16_t4": "run2",
+  "resnet50_5frames_t4": "run3",
   "pipe_deploy_fp32_cv2": "run1",
   "pipe_deploy_int8_cv2": "run1",
   "pipe_deploy_int8_selective_cv2": "run1",
@@ -322,6 +323,17 @@
   "temp": [
    57.5,
    62.8
+  ]
+ },
+ "resnet50_5frames_t4": {
+  "p50": 2349.77,
+  "p95": 2444.41,
+  "p99": 2484.79,
+  "hz": 0.4,
+  "runs": 30,
+  "temp": [
+   69.6,
+   75.0
   ]
  },
  "pipe_deploy_fp32_cv2": {

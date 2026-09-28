@@ -19,9 +19,14 @@ RUN1_VALID = {"fwd_deploy_fp32_t1", "fwd_deploy_fp32_t2", "fwd_deploy_fp32_t3", 
               "pipe_deploy_int8_selective_cv2", "pipe_gps_fp32"}
 
 
+RUN3 = PI_ROOT / "run3"          # ResNet-50 x 5 cross-check (same thermal control as run 2)
+
+
 def src(name, ext="json"):
     if name in RUN1_VALID and (RUN1 / f"{name}.{ext}").is_file():
         return RUN1 / f"{name}.{ext}"
+    if (RUN3 / f"{name}.{ext}").is_file():
+        return RUN3 / f"{name}.{ext}"
     return RUN2 / f"{name}.{ext}"
 
 
@@ -62,7 +67,7 @@ def main():
               "replica_full_t4", "replica_half_t4", "fwd_deploy_fp32_t4_control",
               "fwd_abl_L2_t4", "fwd_abl_L6_t4", "fwd_abl_fuse_mean_t4", "fwd_abl_fuse_concat_t4",
               "fwd_abl_lidar_t4", "fwd_abl_lidar_radar_t4", "fwd_abl_pretrained_t4",
-              "fwd_win_w4_t4", "fwd_win_w5_t4", "fwd_win_w8_t4", "fwd_win_w16_t4"):
+              "fwd_win_w4_t4", "fwd_win_w5_t4", "fwd_win_w8_t4", "fwd_win_w16_t4", "resnet50_5frames_t4"):
         if src(n).is_file():
             res[n] = fwd(n); res["source"][n] = src(n).parent.name
     for n in ("pipe_deploy_fp32_cv2", "pipe_deploy_int8_cv2", "pipe_deploy_int8_selective_cv2",

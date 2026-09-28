@@ -1,0 +1,115 @@
+{
+ "win_w4": {
+  "ckpt": "E_w4_i1337",
+  "window": 4,
+  "modalities": [
+   "gps",
+   "camera"
+  ],
+  "max_err": 3.0994415283203125e-06,
+  "params": 590594
+ },
+ "win_w5": {
+  "ckpt": "C_w5_episode-random_s1337",
+  "window": 5,
+  "modalities": [
+   "gps",
+   "camera"
+  ],
+  "max_err": 3.814697265625e-06,
+  "params": 590594
+ },
+ "win_w8": {
+  "ckpt": "E_w8_i1337",
+  "window": 8,
+  "modalities": [
+   "gps",
+   "camera"
+  ],
+  "max_err": 1.9073486328125e-06,
+  "params": 590594
+ },
+ "win_w16": {
+  "ckpt": "E_w16_i1337",
+  "window": 16,
+  "modalities": [
+   "gps",
+   "camera"
+  ],
+  "max_err": 1.7881393432617188e-06,
+  "params": 590594
+ },
+ "abl_lidar": {
+  "ckpt": "B_ssm_3M_i1337",
+  "window": 2,
+  "modalities": [
+   "gps",
+   "camera",
+   "lidar"
+  ],
+  "max_err": 1.9669532775878906e-06,
+  "params": 688963
+ },
+ "abl_lidar_radar": {
+  "ckpt": "B_ssm_4M_i1337",
+  "window": 2,
+  "modalities": [
+   "gps",
+   "camera",
+   "lidar",
+   "radar"
+  ],
+  "max_err": 2.1457672119140625e-06,
+  "params": 787044
+ },
+ "abl_pretrained": {
+  "ckpt": "B_pretrained_i1337",
+  "window": 2,
+  "modalities": [
+   "gps",
+   "camera"
+  ],
+  "max_err": 3.337860107421875e-06,
+  "params": 1493218
+ },
+ "abl_L2": {
+  "ckpt": "B_ssm_L2_i1337",
+  "window": 2,
+  "modalities": [
+   "gps",
+   "camera"
+  ],
+  "max_err": 2.86102294921875e-06,
+  "params": 357378
+ },
+ "abl_L6": {
+  "ckpt": "B_ssm_L6_i1337",
+  "window": 2,
+  "modalities": [
+   "gps",
+   "camera"
+  ],
+  "max_err": 4.76837158203125e-06,
+  "params": 823810
+ },
+ "abl_fuse_mean": {
+  "ckpt": "B_fuse_mean_i1337",
+  "window": 2,
+  "modalities": [
+   "gps",
+   "camera"
+  ],
+  "max_err": 1.1920928955078125e-06,
+  "params": 590336
+ },
+ "abl_fuse_concat": {
+  "ckpt": "B_fuse_concat_i1337",
+  "window": 2,
+  "modalities": [
+   "gps",
+   "camera"
+  ],
+  "max_err": 1.9297003746032715e-06,
+  "params": 623232
+ }
+}
