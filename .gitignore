@@ -43,3 +43,4 @@ experiments/revision/results/archive_valonly_first7/
 experiments/revision/results/runs/*.npz
 experiments/revision/pi/bundle/
 experiments/revision/pi/dryrun/
+sym_shape_infer_temp.onnx
