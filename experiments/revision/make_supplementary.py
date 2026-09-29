@@ -117,7 +117,7 @@ def table_pi():
     pi = json.load(open(R / "pi" / "pi_summary.json"))
     rows = [("Deployed, fp32, 1 thread", "fwd_deploy_fp32_t1"), ("Deployed, fp32, 2 threads", "fwd_deploy_fp32_t2"),
             ("Deployed, fp32, 3 threads", "fwd_deploy_fp32_t3"), ("Deployed, fp32, 4 threads", "fwd_deploy_fp32_t4"),
-            ("Deployed, fp32 (control, session 2)", "fwd_deploy_fp32_t4_control"),
+            ("Deployed, fp32 (control, phase 2)", "fwd_deploy_fp32_t4_control"),
             ("Deployed, INT8 whole model", "fwd_deploy_int8_t4"), ("Deployed, INT8 convolutions only", "fwd_deploy_int8_selective_t4"),
             ("GPS only", "fwd_gps_fp32_t4"), ("Camera only", "fwd_cam_fp32_t4"),
             ("Core: Transformer", "fwd_core_transformer_t4"), ("Core: GRU", "fwd_core_gru_t4"),
@@ -134,12 +134,12 @@ def table_pi():
     sess = {"run1": "1", "run2": "2", "run3": "2"}
     out = [r"\begin{table}[ht]\centering",
            r"\caption{All forward-pass measurements on the Raspberry~Pi~4 (fp32 unless stated, four threads unless "
-           r"stated, batch 1; latency percentiles in ms). Session~1 runs were not thermally controlled but the board's "
-           r"sticky throttle-history flags were clear after them; session~2 runs started at $\le$50$^\circ$C with "
-           r"1\,s thermal logging, and none showed an active throttling flag or a clock below 1.5~GHz. Session~2 tail "
+           r"stated, batch 1; latency percentiles in ms). Phase~1 runs were not thermally controlled but the board's "
+           r"sticky throttle-history flags were clear after them; phase~2 runs started at 46--53$^\circ$C with "
+           r"1\,s thermal logging, and none showed an active throttling flag or a clock below 1.5~GHz. Phase~2 tail "
            r"percentiles include the small overhead of the 1\,s thermal sampler.}",
            r"\label{tab:s5}\footnotesize\setlength{\tabcolsep}{4pt}",
-           r"\begin{tabular}{lcccccc}\toprule Model & p50 & p95 & p99 & Rate (Hz) & Runs & Session \\ \midrule"]
+           r"\begin{tabular}{lcccccc}\toprule Model & p50 & p95 & p99 & Rate (Hz) & Runs & Phase \\ \midrule"]
     for lab, k in rows:
         v = pi[k]
         out.append(f"{lab} & {v['p50']:.2f} & {v['p95']:.2f} & {v['p99']:.2f} & {v['hz']:.1f} & {v['runs']} & {sess[pi['source'][k]]} \\\\")

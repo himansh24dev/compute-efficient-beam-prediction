@@ -120,11 +120,11 @@ def summarize(point, reps, per_seed=None):
     lo, hi = ci(reps)
     out = OrderedDict()
     for i, m in enumerate(METRICS):
-        d = {"mean": round(float(point[i]), 4), "lo": round(float(lo[i]), 4),
-             "hi": round(float(hi[i]), 4), "half": round(float((hi[i] - lo[i]) / 2), 4)}
+        d = {"mean": round(float(point[i]), 6), "lo": round(float(lo[i]), 6),
+             "hi": round(float(hi[i]), 6), "half": round(float((hi[i] - lo[i]) / 2), 6)}
         if per_seed is not None and len(per_seed) > 1:
-            d["seed_sd"] = round(float(per_seed[:, i].std(ddof=1)), 4)
-            d["per_seed"] = [round(float(x), 4) for x in per_seed[:, i]]
+            d["seed_sd"] = round(float(per_seed[:, i].std(ddof=1)), 6)
+            d["per_seed"] = [round(float(x), 6) for x in per_seed[:, i]]
         out[m] = d
     return out
 
@@ -138,8 +138,8 @@ def paired(a_names, b_names, W, order):
     for i, m in enumerate(METRICS):
         p = 2 * min((diff[:, i] <= 0).mean(), (diff[:, i] >= 0).mean())
         wins = int((sa[:, i] > sb[:, i]).sum()) if len(sa) == len(sb) else None
-        out[m] = {"diff": round(float(pa[i] - pb[i]), 4), "lo": round(float(lo[i]), 4),
-                  "hi": round(float(hi[i]), 4), "p_boot": round(float(min(p, 1.0)), 4),
+        out[m] = {"diff": round(float(pa[i] - pb[i]), 6), "lo": round(float(lo[i]), 6),
+                  "hi": round(float(hi[i]), 6), "p_boot": round(float(min(p, 1.0)), 4),
                   "seed_wins_A": wins, "n_seeds": len(sa)}
     return out
 
