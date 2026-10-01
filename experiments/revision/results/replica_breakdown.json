@@ -1,0 +1,161 @@
+{
+ "window": 5,
+ "total_params": 16266634,
+ "total_gmacs": 23.41,
+ "components": [
+  {
+   "component": "cam",
+   "params": 995818,
+   "params_pct": 6.12,
+   "gmacs": 22.974,
+   "gmacs_pct": 98.14
+  },
+  {
+   "component": "lidar",
+   "params": 126496,
+   "params_pct": 0.78,
+   "gmacs": 0.209,
+   "gmacs_pct": 0.89
+  },
+  {
+   "component": "radar",
+   "params": 126208,
+   "params_pct": 0.78,
+   "gmacs": 0.203,
+   "gmacs_pct": 0.87
+  },
+  {
+   "component": "gps",
+   "params": 33536,
+   "params_pct": 0.21,
+   "gmacs": 0.0,
+   "gmacs_pct": 0.0
+  },
+  {
+   "component": "fuse",
+   "params": 262400,
+   "params_pct": 1.61,
+   "gmacs": 0.001,
+   "gmacs_pct": 0.01
+  },
+  {
+   "component": "core",
+   "params": 1752320,
+   "params_pct": 10.77,
+   "gmacs": 0.009,
+   "gmacs_pct": 0.04
+  },
+  {
+   "component": "head",
+   "params": 12969856,
+   "params_pct": 79.73,
+   "gmacs": 0.013,
+   "gmacs_pct": 0.06
+  }
+ ],
+ "camera_encoder_layers": [
+  {
+   "idx": 0,
+   "type": "Conv3x3-BN-ReLU",
+   "out_shape": [
+    1,
+    82,
+    112,
+    112
+   ]
+  },
+  {
+   "idx": 1,
+   "type": "Conv3x3-BN-ReLU",
+   "out_shape": [
+    1,
+    82,
+    112,
+    112
+   ]
+  },
+  {
+   "idx": 2,
+   "type": "Conv3x3-BN-ReLU",
+   "out_shape": [
+    1,
+    164,
+    112,
+    112
+   ]
+  },
+  {
+   "idx": 3,
+   "type": "MaxPool2d",
+   "out_shape": [
+    1,
+    164,
+    56,
+    56
+   ]
+  },
+  {
+   "idx": 4,
+   "type": "Conv3x3-BN-ReLU",
+   "out_shape": [
+    1,
+    164,
+    56,
+    56
+   ]
+  },
+  {
+   "idx": 5,
+   "type": "Conv3x3-BN-ReLU",
+   "out_shape": [
+    1,
+    328,
+    56,
+    56
+   ]
+  },
+  {
+   "idx": 6,
+   "type": "AdaptiveAvgPool2d",
+   "out_shape": [
+    1,
+    328,
+    1,
+    1
+   ]
+  }
+ ],
+ "head": [
+  "Linear(in_features=1280, out_features=4096, bias=True)",
+  "ReLU(inplace=True)",
+  "Linear(in_features=4096, out_features=1856, bias=True)",
+  "ReLU(inplace=True)",
+  "Linear(in_features=1856, out_features=64, bias=True)"
+ ],
+ "ssm_layers": 4,
+ "dim": 256,
+ "inputs": {
+  "camera": [
+   5,
+   3,
+   224,
+   224
+  ],
+  "gps": [
+   5,
+   3
+  ],
+  "lidar_bev": [
+   5,
+   3,
+   128,
+   128
+  ],
+  "radar_maps": [
+   5,
+   2,
+   128,
+   128
+  ]
+ }
+}

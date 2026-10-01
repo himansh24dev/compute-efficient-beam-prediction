@@ -22,18 +22,30 @@ from .efficiency import count_params, measure_speed, try_flops
 
 
 @torch.no_grad()
-def evaluate_full(model, loader, device, cfg) -> dict:
+def evaluate_full(model, loader, device, cfg, return_preds: bool = False,
+                  target_h: int = 0) -> dict:
+    """Full metrics on `loader`. With return_preds, also returns per-sample softmax
+    probabilities (float16), targets, scenario ids and anchor rows, so pass-level
+    and paired analyses (and seed ensembles) need no re-inference. `target_h` > 0
+    scores against the beam h frames ahead (delay-aligned evaluation)."""
     model.eval()
     acc = new_accumulator()
     per = {}                                              # scenario_id -> accumulator
     chlast = channels_last(cfg)
+    P, T, S, R = [], [], [], []
     for batch in loader:
         inp = _move(batch["inputs"], device, chlast)
-        tgt = batch["beam"].to(device, non_blocking=True)
+        if target_h > 0:
+            tgt = batch["future"][:, target_h - 1].to(device, non_blocking=True)
+        else:
+            tgt = batch["beam"].to(device, non_blocking=True)
         sid = batch["scenario_id"].to(device, non_blocking=True)
         with autocast_context(cfg, device):
             out = model(inp)
             logits = (out[0] if isinstance(out, tuple) else out).float()
+        if return_preds:
+            P.append(torch.softmax(logits, -1).half().cpu()); T.append(tgt.cpu())
+            S.append(sid.cpu()); R.append(batch["row"])
         add(acc, full_metrics(logits, tgt))
         for s in sid.unique():
             m = sid == s
@@ -42,6 +54,9 @@ def evaluate_full(model, loader, device, cfg) -> dict:
             add(per[si], full_metrics(logits[m], tgt[m]))
     res = finalize(acc)
     res["per_scenario"] = {si: finalize(a) for si, a in sorted(per.items())}
+    if return_preds:
+        res["preds"] = {"prob": torch.cat(P).numpy(), "target": torch.cat(T).numpy(),
+                        "scenario_id": torch.cat(S).numpy(), "row": torch.cat(R).numpy()}
     return res
 
 
@@ -55,7 +70,8 @@ def train_one(cfg: DataConfig, exp: dict, core: str, modalities: list[str],
     device = device or get_device(cfg)
     num_beams = int(cfg.beam["num_beams"])
 
-    tr, te, split_info = build_compare_loaders(cfg, exp, modalities, protocol, seed)
+    tr, va, te, split_info = build_compare_loaders(cfg, exp, modalities, protocol, seed)
+    target_h = int(exp.get("target_h", 0))           # >0: train/score the beam h frames ahead
     model = BeamModel(modalities, num_beams, core, exp["model"]).to(device)
     if channels_last(cfg):
         model = model.to(memory_format=torch.channels_last)
@@ -88,7 +104,7 @@ def train_one(cfg: DataConfig, exp: dict, core: str, modalities: list[str],
     crit = nn.CrossEntropyLoss(label_smoothing=float(tcfg.get("label_smoothing", 0.0)))
     chlast = channels_last(cfg); clip = float(tcfg.get("grad_clip", 0.0))
 
-    best = {"top1": -1.0}; best_state = None; gstep = 0
+    best = {"top1": -1.0}; best_state = None; gstep = 0; history = []
     t0 = time.time()
     for epoch in range(epochs):
         model.train(); run = 0.0; ep_t0 = time.time(); nb = len(tr)
@@ -97,7 +113,10 @@ def train_one(cfg: DataConfig, exp: dict, core: str, modalities: list[str],
             for g in opt.param_groups:
                 g["lr"] = g["base_lr"] * sched
             inp = _move(batch["inputs"], device, chlast)
-            tgt = batch["beam"].to(device, non_blocking=True)
+            if target_h > 0:
+                tgt = batch["future"][:, target_h - 1].to(device, non_blocking=True)
+            else:
+                tgt = batch["beam"].to(device, non_blocking=True)
             opt.zero_grad(set_to_none=True)
             with autocast_context(cfg, device):
                 out = model(inp); logits = out[0] if isinstance(out, tuple) else out
@@ -108,20 +127,30 @@ def train_one(cfg: DataConfig, exp: dict, core: str, modalities: list[str],
             scaler.step(opt); scaler.update(); run += loss.item(); gstep += 1
             if verbose and (i % 5 == 0 or i == nb):
                 _progress(core, epoch, epochs, i, nb, run / i, base_lr * lr_at(gstep), ep_t0)
-        val = evaluate_full(model, te, device, cfg)
+        # checkpoint selection on the VALIDATION partition only (carved from the
+        # training side); the test partition is evaluated once, after training.
+        val = evaluate_full(model, va, device, cfg, target_h=target_h)
+        history.append({"epoch": epoch + 1, "loss": run / spe, "val_top1": val["top1"],
+                        "val_top3": val["top3"], "val_dba": val["dba"]})
         if val["top1"] > best["top1"]:
             best = {**val, "epoch": epoch}; best_state = copy.deepcopy(model.state_dict())
         if verbose:
             if sys.stdout.isatty():
                 sys.stdout.write("\r" + " " * 110 + "\r")
             print(f"  [{core}|{'+'.join(modalities)}|{protocol}] ep {epoch+1:02d}/{epochs} "
-                  f"loss={run/spe:.3f} top1={val['top1']:.4f} top3={val['top3']:.4f} "
-                  f"dba={val['dba']:.4f}", flush=True)
+                  f"loss={run/spe:.3f} val_top1={val['top1']:.4f} val_top3={val['top3']:.4f} "
+                  f"val_dba={val['dba']:.4f}", flush=True)
     train_time = time.time() - t0
 
+    # selection-free reference: the final-epoch model, scored once on test
+    test_last = evaluate_full(model, te, device, cfg, return_preds=True, target_h=target_h)
     if best_state is not None:
         model.load_state_dict(best_state)
-    test = evaluate_full(model, te, device, cfg)
+    val_best = {k: best[k] for k in ("top1", "top3", "dba", "epoch") if k in best}
+    test = evaluate_full(model, te, device, cfg, return_preds=True, target_h=target_h)
+    ekey = split_info.pop("episode_key")
+    pr = test["preds"]
+    pr["pass"] = [ekey(s_, r_) for s_, r_ in zip(pr["scenario_id"], pr["row"])]
 
     # Efficiency profile on one real batch.
     sample = next(iter(te))
@@ -130,7 +159,8 @@ def train_one(cfg: DataConfig, exp: dict, core: str, modalities: list[str],
     gflops = try_flops(model, sample_in)
 
     return {"core": core, "modalities": modalities, "protocol": protocol, "seed": seed,
-            "test": test, "split_info": split_info, "train_time_s": train_time,
+            "test": test, "test_last": test_last, "val_best": val_best, "history": history,
+            "split_info": split_info, "train_time_s": train_time,
             "params": count_params(model),
             "efficiency": {**speed, "gflops": gflops},
             "best_state": best_state}

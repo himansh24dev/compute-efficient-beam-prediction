@@ -1,0 +1,292 @@
+{
+ "per_seed": {
+  "1337": {
+   "fp32": {
+    "dba": 0.8392076109257337,
+    "top1": 0.39233341908927194,
+    "top3": 0.7620272703884744,
+    "top5": 0.9032673012606123
+   },
+   "int8_whole": {
+    "dba": 0.8377154558378206,
+    "top1": 0.3851299202469771,
+    "top3": 0.7643426807306406,
+    "top5": 0.9009518909184461
+   },
+   "int8_selective": {
+    "dba": 0.8392419120723802,
+    "top1": 0.39310522253666064,
+    "top3": 0.7612554669410857,
+    "top5": 0.903010033444816
+   },
+   "quantized_ops_whole": {
+    "Gemm": 4,
+    "Conv": 13,
+    "LayerNormalization": 1,
+    "Div": 1,
+    "Add": 28,
+    "Mul": 49,
+    "Reshape": 2,
+    "Unsqueeze": 13,
+    "MatMul": 18,
+    "GlobalAveragePool": 1,
+    "Squeeze": 2,
+    "Flatten": 1,
+    "Concat": 6,
+    "Softmax": 1,
+    "ReduceSum": 1,
+    "Pow": 5,
+    "Sqrt": 5,
+    "Shape": 16,
+    "Slice": 12,
+    "Transpose": 8,
+    "Sigmoid": 8,
+    "Split": 4,
+    "Gather": 17,
+    "Softplus": 4,
+    "Exp": 4,
+    "Einsum": 8
+   },
+   "quantized_ops_selective": {
+    "Conv": 13,
+    "Clip": 9,
+    "Slice": 4
+   }
+  },
+  "2024": {
+   "fp32": {
+    "dba": 0.8552782747576018,
+    "top1": 0.4021095960895292,
+    "top3": 0.7854386416259326,
+    "top5": 0.9163879598662207
+   },
+   "int8_whole": {
+    "dba": 0.8504073358340632,
+    "top1": 0.3959351685104193,
+    "top3": 0.7779778749678415,
+    "top5": 0.9078981219449447
+   },
+   "int8_selective": {
+    "dba": 0.8533916436586216,
+    "top1": 0.3943915616156419,
+    "top3": 0.776434268073064,
+    "top5": 0.9153588886030357
+   },
+   "quantized_ops_whole": {
+    "Gemm": 4,
+    "Conv": 13,
+    "LayerNormalization": 1,
+    "Div": 1,
+    "Add": 28,
+    "Mul": 49,
+    "Reshape": 2,
+    "Unsqueeze": 13,
+    "MatMul": 18,
+    "GlobalAveragePool": 1,
+    "Squeeze": 2,
+    "Flatten": 1,
+    "Concat": 6,
+    "Softmax": 1,
+    "ReduceSum": 1,
+    "Pow": 5,
+    "Sqrt": 5,
+    "Shape": 16,
+    "Slice": 12,
+    "Transpose": 8,
+    "Sigmoid": 8,
+    "Split": 4,
+    "Gather": 17,
+    "Softplus": 4,
+    "Exp": 4,
+    "Einsum": 8
+   },
+   "quantized_ops_selective": {
+    "Conv": 13,
+    "Clip": 9,
+    "Slice": 4
+   }
+  },
+  "7": {
+   "fp32": {
+    "dba": 0.862636132802964,
+    "top1": 0.42526369951119114,
+    "top3": 0.7921276048366349,
+    "top5": 0.9133007460766658
+   },
+   "int8_whole": {
+    "dba": 0.8586227542672575,
+    "top1": 0.4162593259583226,
+    "top3": 0.7882685875996913,
+    "top5": 0.9076408541291484
+   },
+   "int8_selective": {
+    "dba": 0.8619500848750351,
+    "top1": 0.4162593259583226,
+    "top3": 0.7959866220735786,
+    "top5": 0.9125289426292771
+   },
+   "quantized_ops_whole": {
+    "Gemm": 4,
+    "Conv": 13,
+    "LayerNormalization": 1,
+    "Div": 1,
+    "Add": 28,
+    "Mul": 49,
+    "Reshape": 2,
+    "Unsqueeze": 13,
+    "MatMul": 18,
+    "GlobalAveragePool": 1,
+    "Squeeze": 2,
+    "Flatten": 1,
+    "Concat": 6,
+    "Softmax": 1,
+    "ReduceSum": 1,
+    "Pow": 5,
+    "Sqrt": 5,
+    "Shape": 16,
+    "Slice": 12,
+    "Transpose": 8,
+    "Sigmoid": 8,
+    "Split": 4,
+    "Gather": 17,
+    "Softplus": 4,
+    "Exp": 4,
+    "Einsum": 8
+   },
+   "quantized_ops_selective": {
+    "Conv": 13,
+    "Clip": 9,
+    "Slice": 4
+   }
+  },
+  "42": {
+   "fp32": {
+    "dba": 0.8518823381660631,
+    "top1": 0.39413429379984566,
+    "top3": 0.7777206071520453,
+    "top5": 0.9014664265500386
+   },
+   "int8_whole": {
+    "dba": 0.8469084937068899,
+    "top1": 0.3869307949575508,
+    "top3": 0.7648572163622331,
+    "top5": 0.8994082840236687
+   },
+   "int8_selective": {
+    "dba": 0.8468055877725621,
+    "top1": 0.3833290455364034,
+    "top3": 0.7669153588886031,
+    "top5": 0.903010033444816
+   },
+   "quantized_ops_whole": {
+    "Gemm": 4,
+    "Conv": 13,
+    "LayerNormalization": 1,
+    "Div": 1,
+    "Add": 28,
+    "Mul": 49,
+    "Reshape": 2,
+    "Unsqueeze": 13,
+    "MatMul": 18,
+    "GlobalAveragePool": 1,
+    "Squeeze": 2,
+    "Flatten": 1,
+    "Concat": 6,
+    "Softmax": 1,
+    "ReduceSum": 1,
+    "Pow": 5,
+    "Sqrt": 5,
+    "Shape": 16,
+    "Slice": 12,
+    "Transpose": 8,
+    "Sigmoid": 8,
+    "Split": 4,
+    "Gather": 17,
+    "Softplus": 4,
+    "Exp": 4,
+    "Einsum": 8
+   },
+   "quantized_ops_selective": {
+    "Conv": 13,
+    "Clip": 9,
+    "Slice": 4
+   }
+  },
+  "123": {
+   "fp32": {
+    "dba": 0.8370980133927305,
+    "top1": 0.38307177772060713,
+    "top3": 0.7612554669410857,
+    "top5": 0.8922047851813738
+   },
+   "int8_whole": {
+    "dba": 0.8376125491878894,
+    "top1": 0.38127090301003347,
+    "top3": 0.7612554669410857,
+    "top5": 0.8904039104708001
+   },
+   "int8_selective": {
+    "dba": 0.8343366711434713,
+    "top1": 0.3781836892204785,
+    "top3": 0.7561101106251608,
+    "top5": 0.8909184461023926
+   },
+   "quantized_ops_whole": {
+    "Gemm": 4,
+    "Conv": 13,
+    "LayerNormalization": 1,
+    "Div": 1,
+    "Add": 28,
+    "Mul": 49,
+    "Reshape": 2,
+    "Unsqueeze": 13,
+    "MatMul": 18,
+    "GlobalAveragePool": 1,
+    "Squeeze": 2,
+    "Flatten": 1,
+    "Concat": 6,
+    "Softmax": 1,
+    "ReduceSum": 1,
+    "Pow": 5,
+    "Sqrt": 5,
+    "Shape": 16,
+    "Slice": 12,
+    "Transpose": 8,
+    "Sigmoid": 8,
+    "Split": 4,
+    "Gather": 17,
+    "Softplus": 4,
+    "Exp": 4,
+    "Einsum": 8
+   },
+   "quantized_ops_selective": {
+    "Conv": 13,
+    "Clip": 9,
+    "Slice": 4
+   }
+  }
+ },
+ "mean": {
+  "fp32": {
+   "dba": 0.8492,
+   "top1": 0.3994,
+   "top3": 0.7757,
+   "top5": 0.9053,
+   "dba_sd": 0.0109
+  },
+  "int8_whole": {
+   "dba": 0.8463,
+   "top1": 0.3931,
+   "top3": 0.7713,
+   "top5": 0.9013,
+   "dba_sd": 0.0089
+  },
+  "int8_selective": {
+   "dba": 0.8471,
+   "top1": 0.3931,
+   "top3": 0.7713,
+   "top5": 0.905,
+   "dba_sd": 0.011
+  }
+ }
+}

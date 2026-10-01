@@ -43,7 +43,7 @@ def main():
     exp = load_yaml(args.config)
     cfg = load_data_config(exp["data_config"])
     seed = int(exp["sweep"]["seeds"][0])
-    _, te, _ = build_compare_loaders(cfg, exp, ["gps", "camera"], args.protocol, seed)
+    _, _, te, _ = build_compare_loaders(cfg, exp, ["gps", "camera"], args.protocol, seed)
 
     print(f"protocol={args.protocol}")
     for m in args.models:

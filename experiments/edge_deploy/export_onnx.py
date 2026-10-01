@@ -88,7 +88,7 @@ def main():
         wrap, (gps, camera), fp32_path,
         input_names=["gps", "camera"], output_names=["logits"],
         dynamic_axes={"gps": {0: "batch"}, "camera": {0: "batch"}},
-        opset_version=17, do_constant_folding=True)
+        opset_version=17, do_constant_folding=True, dynamo=False)
     print(f"\nexported fp32 ONNX -> {fp32_path}  ({os.path.getsize(fp32_path)/1e6:.2f} MB)")
 
     # numerical equivalence check

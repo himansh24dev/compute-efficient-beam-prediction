@@ -31,3 +31,16 @@ __pycache__/
 *.egg-info/
 .venv/
 venv/
+
+# --- revision: onnxruntime quantization temp external-data files, local artifacts ---
+/*-*-*-*-*.data
+.venv/
+logs/
+Scenario3?
+experiments/revision/results/ckpt/
+experiments/revision/results/onnx/
+experiments/revision/results/archive_valonly_first7/
+experiments/revision/results/runs/*.npz
+experiments/revision/pi/bundle/
+experiments/revision/pi/dryrun/
+sym_shape_infer_temp.onnx

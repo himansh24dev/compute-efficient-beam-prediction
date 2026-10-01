@@ -55,6 +55,36 @@ def fit_gps_stats(cfg: DataConfig, train_episodes: list[Episode],
     return stats
 
 
+def fit_gps_stats_frames(cfg: DataConfig, frames: dict[int, "np.ndarray"]) -> dict:
+    """GPS mean/std over an explicit set of TRAIN frames, {scenario_id: row array}.
+
+    Not cached to disk: each split fits its own statistics from its own training
+    frames only (validation and test frames never contribute). Reads the raw GPS
+    features from the memmap cache when present, else recomputes them from the CSV.
+    """
+    from ..cache import is_cached, scenario_cache_dir
+    feats = []
+    for sid, rows in sorted(frames.items()):
+        rows = np.unique(np.asarray(rows, dtype=np.int64))
+        if is_cached(cfg, sid) and (scenario_cache_dir(cfg, sid) / "gps.npy").is_file():
+            g = np.load(scenario_cache_dir(cfg, sid) / "gps.npy", mmap_mode="r")
+            feats.append(np.asarray(g[rows], dtype=np.float64))
+        else:
+            from ..paths import resolve_relative
+            cols = cfg.columns
+            df = build_sample_index(cfg, sid, allow_heldout=True)
+            for r in rows:
+                row = df.iloc[int(r)]
+                bs_lat, bs_lon = gps.read_latlon(resolve_relative(cfg, sid, row[cols["bs_loc"]]))
+                ue_lat, ue_lon = gps.read_latlon(resolve_relative(cfg, sid, row[cols["ue_loc"]]))
+                feats.append(gps.raw_features(ue_lat, ue_lon, bs_lat, bs_lon,
+                                              row.get(cols["ue_speed"], 0.0))[None].astype(np.float64))
+    arr = np.concatenate(feats, axis=0)
+    return {"feature_names": ["dlat_m", "dlon_m", "speed_kmph"],
+            "mean": arr.mean(axis=0).tolist(), "std": arr.std(axis=0).tolist(),
+            "n_samples": int(arr.shape[0]), "version": cfg.version}
+
+
 def load_gps_stats(cfg: DataConfig) -> dict:
     path = _gps_stats_path(cfg)
     if not path.is_file():

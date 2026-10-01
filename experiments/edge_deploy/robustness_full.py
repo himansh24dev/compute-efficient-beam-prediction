@@ -115,7 +115,7 @@ def main():
                            dtype=torch.float32, device=device)
 
     model = _load_model(args.ckpt, device)
-    _, te, _ = build_compare_loaders(cfg, exp, ["gps", "camera"], "episode-random", 1337)
+    _, _, te, _ = build_compare_loaders(cfg, exp, ["gps", "camera"], "episode-random", 1337)
 
     # (family, label, levels) — level meaning depends on the family
     sweep = [
